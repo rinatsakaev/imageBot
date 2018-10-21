@@ -6,7 +6,7 @@ public class Main {
 
     public static void main(String[] args){
         Profile profile = new Profile();
-        UserRepo repo = new UserRepo();
+        ProfileRepo repo = new ProfileRepo();
         repo.add(profile);
 //        File file = new File("C:\\img.jpg");
 //        Image img = new Image(file);
