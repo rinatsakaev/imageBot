@@ -6,6 +6,7 @@ import com.mongodb.MongoClientURI;
 import com.mongodb.gridfs.GridFS;
 import com.mongodb.gridfs.GridFSDBFile;
 import com.mongodb.gridfs.GridFSInputFile;
+import org.apache.commons.io.FileUtils;
 import org.bson.types.ObjectId;
 
 import java.io.File;
@@ -23,15 +24,10 @@ public class GridFSUtil {
         imageBucket = new GridFS(database, "images");
     }
 
-    public String UploadFile(File file){
+    public String UploadFile(InputStream is){
         GridFSInputFile gfsFile = null;
-        try {
-            gfsFile  = imageBucket.createFile(file);
-            gfsFile.save();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        gfsFile  = imageBucket.createFile(is);
+        gfsFile.save();
         return gfsFile.get("_id").toString();
     }
 
@@ -44,5 +40,14 @@ public class GridFSUtil {
         return imageForOutput.getInputStream();
     }
 
+    public File getFileById(String id){
+        File file = new File(id);
+        try {
+            FileUtils.copyInputStreamToFile(GetFileInputStream(id), file);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return file;
+    }
 
 }

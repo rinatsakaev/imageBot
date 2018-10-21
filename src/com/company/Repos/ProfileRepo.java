@@ -1,14 +1,20 @@
-package com.company;
+package com.company.Repos;
 
 import com.company.Helpers.HibernateUtil;
+import com.company.IRepository;
 import com.company.Models.Profile;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
 import java.util.List;
 
-public class ProfileRepo {
+public class ProfileRepo implements IRepository<Profile> {
     String clsName = "Profile";
+
+    public ProfileRepo(){
+
+    }
+
     public List<Profile> getAll() {
         Session session = HibernateUtil.getInstance().getSession();
         return (List<Profile>) session.createQuery("FROM "+clsName).list();

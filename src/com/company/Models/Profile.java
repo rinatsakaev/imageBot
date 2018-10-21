@@ -7,12 +7,17 @@ public class Profile {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long Id;
+    private String Login;
 
-    @OneToMany(mappedBy = "profile")
+    @OneToMany(mappedBy = "Profile")
     private List<Image> Images;
 
     public Profile(){
 
+    }
+
+    public Profile(String login){
+        Login = login;
     }
 
     public Long getId() {
@@ -29,5 +34,13 @@ public class Profile {
 
     public void setImages(List<Image> images) {
         Images = images;
+    }
+
+    public String getLogin() {
+        return Login;
+    }
+
+    public void setLogin(String login) {
+        Login = login;
     }
 }

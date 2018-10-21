@@ -1,6 +1,7 @@
-package com.company;
+package com.company.Repos;
 import com.company.Helpers.GridFSUtil;
 import com.company.Helpers.HibernateUtil;
+import com.company.IRepository;
 import com.company.Models.Image;
 import org.apache.commons.io.FileUtils;
 import org.hibernate.Session;
@@ -9,7 +10,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-public class ImageRepo {
+public class ImageRepo implements IRepository<Image> {
     String clsName = "Image";
     GridFSUtil gridFSUtil;
     public ImageRepo(){
@@ -20,7 +21,7 @@ public class ImageRepo {
         Session session = HibernateUtil.getInstance().getSession();
         List<Image> images = (List<Image>) session.createQuery("FROM "+clsName).list();
         for (Image img: images)
-            img.setFile(getFileById(img.getId()));
+            img.setInputStream(gridFSUtil.GetFileInputStream(img.getId()));
 
         return images;
     }
@@ -33,7 +34,7 @@ public class ImageRepo {
     public Image getRandom() {
         Session session = HibernateUtil.getInstance().getSession();
         Image img = (Image) session.createQuery("FROM " + clsName + " ORDER BY RANDOM()").list().get(0);
-        img.setFile(getFileById(img.getId()));
+        img.setInputStream(gridFSUtil.GetFileInputStream(img.getId()));
         return img;
     }
 
@@ -41,7 +42,7 @@ public class ImageRepo {
     public Image getById(long id) {
         Session session = HibernateUtil.getInstance().getSession();
         Image img = session.get(Image.class, id);
-        img.setFile(getFileById(img.getId()));
+        img.setInputStream(gridFSUtil.GetFileInputStream(img.getId()));
         return img;
     }
 
@@ -49,7 +50,7 @@ public class ImageRepo {
     public void add(Image item) {
         Session session = HibernateUtil.getInstance().getSession();
         Transaction tx = session.beginTransaction();
-        String id = gridFSUtil.UploadFile(item.getFile());
+        String id = gridFSUtil.UploadFile(item.getInputStream());
         item.setId(id);
         session.persist(item);
         tx.commit();
@@ -71,14 +72,6 @@ public class ImageRepo {
         session.update(item);
         tx.commit();
     }
-
-    private File getFileById(String id){
-        File file = new File(id);
-        try {
-            FileUtils.copyInputStreamToFile(gridFSUtil.GetFileInputStream(id), file);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return file;
-    }
+//
+//
 }

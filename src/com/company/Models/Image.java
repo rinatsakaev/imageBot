@@ -2,42 +2,45 @@ package com.company.Models;
 
 import javax.persistence.*;
 import java.io.File;
+import java.io.InputStream;
+import java.nio.file.attribute.UserDefinedFileAttributeView;
 
 @Entity
 public class Image {
     @Id
     private String Id;
-    private int Brightness;
-    private int Contrast;
+    private double Brightness;
+    private double Contrast;
 
     @Transient
-    private File File;
+    private InputStream InputStream;
 
     @ManyToOne
-    @JoinColumn(name="user_id", nullable=false)
+    @JoinColumn(name="User_Id", nullable=false)
     private Profile Profile;
 
     public Image() {
 
     }
 
-    public Image(File file){
-        File = file;
+    public Image(InputStream is, Profile profile){
+        InputStream = is;
+        Profile = profile;
     }
 
-    public int getBrightness() {
+    public double getBrightness() {
         return Brightness;
     }
 
-    public void setBrightness(int brightness) {
+    public void setBrightness(double brightness) {
         Brightness = brightness;
     }
 
-    public int getContrast() {
+    public double getContrast() {
         return Contrast;
     }
 
-    public void setContrast(int contrast) {
+    public void setContrast(double contrast) {
         Contrast = contrast;
     }
 
@@ -58,12 +61,11 @@ public class Image {
         Profile = profile;
     }
 
-    public File getFile() {
-        return File;
+    public java.io.InputStream getInputStream() {
+        return InputStream;
     }
 
-    public void setFile(File file) {
-        File = file;
+    public void setInputStream(java.io.InputStream inputStream) {
+        InputStream = inputStream;
     }
-
 }
