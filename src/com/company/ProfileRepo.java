@@ -7,7 +7,7 @@ import org.hibernate.Transaction;
 
 import java.util.List;
 
-public class UserRepo {
+public class ProfileRepo {
     String clsName = "Profile";
     public List<Profile> getAll() {
         Session session = HibernateUtil.getInstance().getSession();
