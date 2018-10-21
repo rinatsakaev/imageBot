@@ -72,6 +72,4 @@ public class ImageRepo implements IRepository<Image> {
         session.update(item);
         tx.commit();
     }
-//
-//
 }

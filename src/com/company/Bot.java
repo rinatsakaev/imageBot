@@ -1,5 +1,4 @@
 package com.company;
-
 import com.company.Helpers.GridFSUtil;
 import com.company.Helpers.OpenCVUtil;
 import com.company.Helpers.WebUtil;
@@ -7,14 +6,9 @@ import com.company.Models.Image;
 import com.company.Models.Profile;
 import com.company.Repos.ImageRepo;
 import com.company.Repos.ProfileRepo;
-import org.apache.commons.io.FileUtils;
-
-import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Scanner;
-import java.util.stream.Collectors;
 
 public class Bot implements Runnable {
     private IRepository<Profile> profileRepo;
@@ -45,7 +39,6 @@ public class Bot implements Runnable {
             } catch (Exception e){
                 break;
             }
-
         }
     }
 

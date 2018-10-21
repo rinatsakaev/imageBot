@@ -1,10 +1,4 @@
 package com.company;
-
-import com.company.Models.Image;
-import com.company.Models.Profile;
-
-import java.io.File;
-import java.util.List;
 import java.util.Scanner;
 
 public class Main {

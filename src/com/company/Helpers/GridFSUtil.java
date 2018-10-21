@@ -25,8 +25,7 @@ public class GridFSUtil {
     }
 
     public String UploadFile(InputStream is){
-        GridFSInputFile gfsFile = null;
-        gfsFile  = imageBucket.createFile(is);
+        GridFSInputFile gfsFile = imageBucket.createFile(is);
         gfsFile.save();
         return gfsFile.get("_id").toString();
     }
