@@ -57,6 +57,10 @@ public class Bot implements Runnable {
     private void handleCommand(String command) throws Exception {
         switch (command){
             case "ls":
+                if (profile.getImages() == null){
+                    System.out.println("Нет картинок");
+                    break;
+                }
                 for (Image img:profile.getImages())
                     System.out.println(img.getId());
                 break;
