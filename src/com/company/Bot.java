@@ -12,7 +12,6 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Queue;
-import java.util.Scanner;
 
 public class Bot implements Runnable {
     private IRepository<Profile> profileRepo;
@@ -37,17 +36,18 @@ public class Bot implements Runnable {
     public void run() {
         System.out.println("Команды: ls - показать загруженные картинки\n" +
                 "cb - обработать картинку");
+
         while (true) {
-            if (profileRequests.size() != 0) {
-                String message = profileRequests.poll();
-                try {
-                    handleCommand(message);
-                } catch (Exception e) {
-                    break;
-                }
+            String cmd = waitForInput();
+            try {
+                handleCommand(cmd);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
+
     }
+
 
     public void addToQueue(String message) {
         profileRequests.add(message);
@@ -77,17 +77,24 @@ public class Bot implements Runnable {
                 break;
             case "cb":
                 System.out.println("Дай ссылку на картинку");
-                Scanner sc = new Scanner(System.in);
-                String url = "https://pp.userapi.com/c849520/v849520259/68826/g7DgzbnYI7Q.jpg";
+                String url = waitForInput();
                 InputStream picture = webUtil.getStreamFromURL(url);
                 Image img = new Image(picture, profile);
                 imageRepo.add(img);
+                try {
+                    System.out.println("Круто. Теперь число от 1.0 до 3.0");
 
-                System.out.println("Круто. Теперь число от 1.0 до 3.0");
-                img.setBrightness(waitNumber());
+                    double brightness = Double.parseDouble(waitForInput());
+                    img.setBrightness(brightness);
 
-                System.out.println("И еще одно от 0 до 100");
-                img.setContrast(waitNumber());
+                    System.out.println("И еще одно от 0 до 100");
+
+                    double contrast = Double.parseDouble(waitForInput());
+                    img.setContrast(contrast);
+
+                } catch (Exception e) {
+                    System.out.println("Это не то число >:C");
+                }
 
                 imageRepo.update(img);
                 gridFSUtil.getFileById(img.getId());
@@ -96,21 +103,16 @@ public class Bot implements Runnable {
                 break;
             case "exit":
                 throw new Exception("Exit");
+            default:
+                run();
         }
     }
 
-    private int waitNumber(){
-        int num = -1;
-        while (num == -1){
+    private String waitForInput() {
+        while (true)
             if (profileRequests.size() != 0)
-                try {
-                    num = Integer.parseInt(profileRequests.poll());
-                }
-                catch (Exception e){
-                    System.out.println("Это не то число >:C");
-                    num = -1;
-                }
-        }
-        return num;
+                return profileRequests.poll();
+
     }
+
 }

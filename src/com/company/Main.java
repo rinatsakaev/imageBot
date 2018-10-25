@@ -16,17 +16,11 @@ public class Main {
             botThread.start();
             while (true){
                 String message = sc.nextLine();
-                //System.out.println("от лица профиля " + login);
                 if (message == "stop"){
                     break;
                 }
                 bot.addToQueue(message);
             }
-            //try {
-            //    botThread.join();
-            //} catch (InterruptedException e) {
-            //    e.printStackTrace();
-            //}
         }
 
     }
