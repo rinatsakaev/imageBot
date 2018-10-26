@@ -12,6 +12,11 @@ public class Main {
         while (true){
             System.out.println("Введи логин");
             String login = sc.nextLine();
+
+            if (login.equals("stop")){
+                break;
+            }
+
             if (!profileBot.containsKey(login)){
                 bot = new Bot(login);
                 Thread botThread = new Thread(bot);
@@ -22,9 +27,6 @@ public class Main {
 
             System.out.println("Введи сообщение");
             String message = sc.nextLine();
-            if (message == "stop"){
-                break;
-            }
             profileBot.get(login).addToQueue(message);
 
         }
