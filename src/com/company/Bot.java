@@ -35,8 +35,8 @@ public class Bot implements Runnable {
     @Override
     public void run() {
         System.out.println("Команды: ls - показать загруженные картинки\n" +
-                "cb - обработать картинку");
-
+                "cb - обработать картинку\n" +
+                "help - вывести это сообщение еще раз");
         while (true) {
             String cmd = waitForInput();
             try {
@@ -101,10 +101,15 @@ public class Bot implements Runnable {
                 openCVUtil.ChangeBrightness(img.getId(), img.getBrightness(), img.getContrast());
                 System.out.println("Картинка готова");
                 break;
+            case "help":
+                System.out.println("Команды: ls - показать загруженные картинки\n" +
+                        "cb - обработать картинку\n" +
+                        "help - вывести это сообщение еще раз");
+                break;
             case "exit":
                 throw new Exception("Exit");
             default:
-                run();
+                break;
         }
     }
 
