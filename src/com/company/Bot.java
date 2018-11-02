@@ -7,41 +7,50 @@ import com.company.Models.Image;
 import com.company.Models.Profile;
 import com.company.Repos.ImageRepo;
 import com.company.Repos.ProfileRepo;
-import net.dv8tion.jda.core.entities.Message;
-import net.dv8tion.jda.core.entities.impl.MessageImpl;
-import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
-import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
-import java.io.File;
 import java.io.InputStream;
 import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Queue;
 
-public class Bot extends ListenerAdapter implements Runnable{
+public class Bot implements Runnable {
     private IRepository<Profile> profileRepo;
     private IRepository<Image> imageRepo;
     private Profile profile;
     private WebUtil webUtil;
     private GridFSUtil gridFSUtil;
     private OpenCVUtil openCVUtil;
-    private Queue<MessageReceivedEvent> profileRequests;
+    private Queue<String> profileRequests;
 
-    public Bot() {
+    public Bot(String login) {
         webUtil = new WebUtil();
         gridFSUtil = new GridFSUtil();
         openCVUtil = new OpenCVUtil();
         profileRepo = new ProfileRepo();
         imageRepo = new ImageRepo();
         profileRequests = new PriorityQueue<>();
+        authorize(login);
     }
 
-    public void onMessageReceived(MessageReceivedEvent e){
-        if (e.getMessage().getContent().startsWith("!")){
-            authorize(e.getAuthor().getName());
-            profileRequests.add(e);
+    @Override
+    public void run() {
+        System.out.println("Команды: ls - показать загруженные картинки\n" +
+                "cb - обработать картинку\n" +
+                "help - вывести это сообщение еще раз");
+        while (true) {
+            String cmd = waitForInput();
+            try {
+                handleCommand(cmd);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
+    }
+
+
+    public void addToQueue(String message) {
+        profileRequests.add(message);
     }
 
     private void authorize(String login) {
@@ -56,50 +65,46 @@ public class Bot extends ListenerAdapter implements Runnable{
         }
     }
 
-    private void handleCommand(MessageReceivedEvent e) throws Exception {
-        String command = e.getMessage().getContent().substring(1);
+    private void handleCommand(String command) throws Exception {
         switch (command) {
             case "ls":
                 if (profile.getImages() == null) {
-                    e.getChannel().sendMessage("Нет картинок").queue();
+                    System.out.println("Нет картинок");
                     break;
                 }
                 for (Image img : profile.getImages())
-                    e.getChannel().sendMessage(img.getId()).queue();
+                    System.out.println(img.getId());
                 break;
             case "cb":
-                e.getChannel().sendMessage("Дай ссылку на картинку").queue();
-                String url = waitForInput().getMessage().getContent().substring(1);
+                System.out.println("Дай ссылку на картинку");
+                String url = waitForInput();
                 InputStream picture = webUtil.getStreamFromURL(url);
                 Image img = new Image(picture, profile);
                 imageRepo.add(img);
                 try {
-                    e.getChannel().sendMessage("Круто. Теперь число от 1.0 до 3.0").queue();
+                    System.out.println("Круто. Теперь число от 1.0 до 3.0");
 
-                    String bright = waitForInput().getMessage().getContent().substring(1);
-                    double brightness = Double.parseDouble(bright);
+                    double brightness = Double.parseDouble(waitForInput());
                     img.setBrightness(brightness);
 
-                    e.getChannel().sendMessage("И еще одно от 0 до 100").queue();
+                    System.out.println("И еще одно от 0 до 100");
 
-                    String contr = waitForInput().getMessage().getContent().substring(1);
-                    double contrast = Double.parseDouble(contr);
+                    double contrast = Double.parseDouble(waitForInput());
                     img.setContrast(contrast);
 
-                } catch (Exception e1) {
-                    e.getChannel().sendMessage("Это не то число >:C").queue();
+                } catch (Exception e) {
+                    System.out.println("Это не то число >:C");
                 }
 
                 imageRepo.update(img);
                 gridFSUtil.getFileById(img.getId());
                 openCVUtil.ChangeBrightness(img.getId(), img.getBrightness(), img.getContrast());
-                File file = new File("output.jpg");
-                e.getChannel().sendFile(file, e.getChannel().sendMessage("Картинка готова").complete()).queue();
+                System.out.println("Картинка готова");
                 break;
             case "help":
-                e.getChannel().sendMessage("Команды: ls - показать загруженные картинки\n" +
+                System.out.println("Команды: ls - показать загруженные картинки\n" +
                         "cb - обработать картинку\n" +
-                        "help - вывести это сообщение еще раз").queue();
+                        "help - вывести это сообщение еще раз");
                 break;
             case "exit":
                 throw new Exception("Exit");
@@ -108,22 +113,11 @@ public class Bot extends ListenerAdapter implements Runnable{
         }
     }
 
-    private MessageReceivedEvent waitForInput() {
+    private String waitForInput() {
         while (true)
             if (profileRequests.size() != 0)
                 return profileRequests.poll();
 
     }
 
-    @Override
-    public void run() {
-        while(true) {
-            MessageReceivedEvent cmd = waitForInput();
-            try {
-                handleCommand(cmd);
-            } catch (Exception var3) {
-                var3.printStackTrace();
-            }
-        }
-    }
 }
