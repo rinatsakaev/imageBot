@@ -1,23 +1,24 @@
 package com.company;
+
 import java.util.*;
 
 public class Main {
 
-    public static void main(String[] args){
+    public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         Bot bot = null;
         Map<String, Bot> profileBot = new HashMap<>();
         List<Thread> threads = new ArrayList<>();
 
-        while (true){
+        while (true) {
             System.out.println("Введи логин");
             String login = sc.nextLine();
 
-            if (login.equals("stop")){
+            if (login.equals("stop")) {
                 break;
             }
 
-            if (!profileBot.containsKey(login)){
+            if (!profileBot.containsKey(login)) {
                 bot = new Bot(login);
                 Thread botThread = new Thread(bot);
                 botThread.start();
@@ -31,7 +32,7 @@ public class Main {
 
         }
 
-        for (Thread thread : threads){
+        for (Thread thread : threads) {
             thread.stop();
         }
 

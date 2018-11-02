@@ -16,14 +16,14 @@ public class Image {
     private InputStream InputStream;
 
     @ManyToOne
-    @JoinColumn(name="User_Id", nullable=false)
+    @JoinColumn(name = "User_Id", nullable = false)
     private Profile Profile;
 
     public Image() {
 
     }
 
-    public Image(InputStream is, Profile profile){
+    public Image(InputStream is, Profile profile) {
         InputStream = is;
         Profile = profile;
     }

@@ -1,4 +1,5 @@
 package com.company.Models;
+
 import javax.persistence.*;
 import java.util.List;
 
@@ -12,11 +13,11 @@ public class Profile {
     @OneToMany(mappedBy = "Profile")
     private List<Image> Images;
 
-    public Profile(){
+    public Profile() {
 
     }
 
-    public Profile(String login){
+    public Profile(String login) {
         Login = login;
     }
 

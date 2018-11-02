@@ -11,18 +11,18 @@ import java.util.List;
 public class ProfileRepo implements IRepository<Profile> {
     String clsName = "Profile";
 
-    public ProfileRepo(){
+    public ProfileRepo() {
 
     }
 
     public List<Profile> getAll() {
         Session session = HibernateUtil.getInstance().getSession();
-        return (List<Profile>) session.createQuery("FROM "+clsName).list();
+        return (List<Profile>) session.createQuery("FROM " + clsName).list();
     }
 
     public long getCount() {
         Session session = HibernateUtil.getInstance().getSession();
-        return (long) session.createQuery("SELECT COUNT(*) FROM "+clsName).list().get(0);
+        return (long) session.createQuery("SELECT COUNT(*) FROM " + clsName).list().get(0);
     }
 
     public Profile getRandom() {

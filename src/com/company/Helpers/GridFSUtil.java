@@ -17,32 +17,32 @@ public class GridFSUtil {
     private DB database;
     private GridFS imageBucket;
 
-    public GridFSUtil(){
+    public GridFSUtil() {
         MongoClientURI connectionString = new MongoClientURI("mongodb://root:root@localhost:27017/");
         MongoClient mongoClient = new MongoClient(connectionString);
         database = mongoClient.getDB("imagesdb");
         imageBucket = new GridFS(database, "images");
     }
 
-    public String UploadFile(InputStream is){
+    public String uploadFile(InputStream is) {
         GridFSInputFile gfsFile = imageBucket.createFile(is);
         gfsFile.save();
         return gfsFile.get("_id").toString();
     }
 
-    public void DeleteFile(String id){
+    public void deleteFile(String id) {
         imageBucket.remove(new ObjectId(id));
     }
 
-    public InputStream GetFileInputStream(String id){
+    public InputStream getFileInputStream(String id) {
         GridFSDBFile imageForOutput = imageBucket.findOne(new ObjectId(id));
         return imageForOutput.getInputStream();
     }
 
-    public File getFileById(String id){
+    public File getFileById(String id) {
         File file = new File(id);
         try {
-            FileUtils.copyInputStreamToFile(GetFileInputStream(id), file);
+            FileUtils.copyInputStreamToFile(getFileInputStream(id), file);
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -98,7 +98,7 @@ public class Bot implements Runnable {
 
                 imageRepo.update(img);
                 gridFSUtil.getFileById(img.getId());
-                openCVUtil.ChangeBrightness(img.getId(), img.getBrightness(), img.getContrast());
+                openCVUtil.changeBrightness(img.getId(), img.getBrightness(), img.getContrast());
                 System.out.println("Картинка готова");
                 break;
             case "help":

@@ -43,14 +43,14 @@ public class BotTest extends TestCase {
     public void testTenUser() {
         try {
             Map<String, Bot> profileBot = new HashMap<>();
-            for (int i = 0; i < 10; i++){
+            for (int i = 0; i < 10; i++) {
                 Bot bot = new Bot(Integer.toString(i));
                 System.out.println(i);
                 Thread botThread = new Thread(bot);
                 botThread.start();
                 profileBot.put(Integer.toString(i), bot);
             }
-            for (int i = 0; i < profileBot.size(); i++){
+            for (int i = 0; i < profileBot.size(); i++) {
                 profileBot.get(Integer.toString(i)).addToQueue("cb");
             }
             assert (true);
