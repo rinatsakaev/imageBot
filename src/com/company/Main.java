@@ -1,24 +1,39 @@
 package com.company;
 import java.util.*;
-import net.dv8tion.jda.core.AccountType;
-import net.dv8tion.jda.core.JDABuilder;
-import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
-
-public class Main extends ListenerAdapter {
+public class Main {
 
     public static void main(String[] args){
-        JDABuilder jda = new JDABuilder(AccountType.BOT);
-        jda.setToken("NTA2NTE3NDQ5NzUyMTgyODE1.DrjSrA.bl7kiFhTl4546XLhLrE2UUvAYMo");
-        jda.setAudioEnabled(false);
-        Bot bot = new Bot();
-        jda.addEventListener(bot);
-        Thread threadBot = new Thread(bot);
-        threadBot.start();
-        try {
-            jda.buildAsync();
-        }catch (Exception e){
-            System.out.println("Bot exc " + e.getLocalizedMessage());
+        Scanner sc = new Scanner(System.in);
+        Bot bot = null;
+        Map<String, Bot> profileBot = new HashMap<>();
+        List<Thread> threads = new ArrayList<>();
+
+        while (true){
+            System.out.println("Введи логин");
+            String login = sc.nextLine();
+
+            if (login.equals("stop")){
+                break;
+            }
+
+            if (!profileBot.containsKey(login)){
+                bot = new Bot(login);
+                Thread botThread = new Thread(bot);
+                botThread.start();
+                profileBot.put(login, bot);
+                threads.add(botThread);
+            }
+
+            System.out.println("Введи сообщение");
+            String message = sc.nextLine();
+            profileBot.get(login).addToQueue(message);
+
         }
+
+        for (Thread thread : threads){
+            thread.stop();
+        }
+
     }
 }
