@@ -18,9 +18,9 @@ public class GridFSUtil {
     private GridFS imageBucket;
 
     public GridFSUtil() {
-        MongoClientURI connectionString = new MongoClientURI("mongodb://root:root@localhost:27017/");
+        MongoClientURI connectionString = new MongoClientURI("mongodb://root:root@localhost:27017/"); //TODO Этого хардкода тут быть не должно
         MongoClient mongoClient = new MongoClient(connectionString);
-        database = mongoClient.getDB("imagesdb");
+        database = mongoClient.getDB("imagesdb"); //TODO Я бы не использовал deprecated API, а так же бы не делал суффикс db у имени базы данных
         imageBucket = new GridFS(database, "images");
     }
 
@@ -42,9 +42,10 @@ public class GridFSUtil {
     public File getFileById(String id) {
         File file = new File(id);
         try {
+            //TODO А кто закрывает InputStream, который получился из getFileInputStream?
             FileUtils.copyInputStreamToFile(getFileInputStream(id), file);
         } catch (IOException e) {
-            e.printStackTrace();
+            e.printStackTrace(); //TODO Прямо видно, что вы используете лучшие практики логирования, прямо как я вам на паре показывал :)
         }
         return file;
     }

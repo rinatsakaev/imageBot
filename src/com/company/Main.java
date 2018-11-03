@@ -6,6 +6,7 @@ public class Main {
 
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
+        //TODO Не очень понятно, зачем эта переменная вынесена так высоко
         Bot bot = null;
         Map<String, Bot> profileBot = new HashMap<>();
         List<Thread> threads = new ArrayList<>();
@@ -29,7 +30,6 @@ public class Main {
             System.out.println("Введи сообщение");
             String message = sc.nextLine();
             profileBot.get(login).addToQueue(message);
-
         }
 
         for (Thread thread : threads) {

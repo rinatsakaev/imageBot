@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Queue;
 
+//TODO Достаточно странный дизайн получился: ни действия просто не добавить, ни взаимодействие с пользователем не изолировано. При прикручивании телеграмма скорее всего придется полностью переделывать все.
 public class Bot implements Runnable {
     private IRepository<Profile> profileRepo;
     private IRepository<Image> imageRepo;
@@ -20,6 +21,7 @@ public class Bot implements Runnable {
     private WebUtil webUtil;
     private GridFSUtil gridFSUtil;
     private OpenCVUtil openCVUtil;
+    //TODO С очередью есть некоторая проблема. Вы добавляете из одного потока, который работает в Main, а удаляете из потока, в котором запущен бот. Вместо этого стоит воспользоваться какой-нибудь потокобезопасной очередью
     private Queue<String> profileRequests;
 
     public Bot(String login) {
@@ -42,10 +44,9 @@ public class Bot implements Runnable {
             try {
                 handleCommand(cmd);
             } catch (Exception e) {
-                e.printStackTrace();
+                e.printStackTrace(); //TODO Прямо видно, что вы используете лучшие практики логирования, прямо как я вам на паре показывал :)
             }
         }
-
     }
 
 
@@ -78,6 +79,7 @@ public class Bot implements Runnable {
             case "cb":
                 System.out.println("Дай ссылку на картинку");
                 String url = waitForInput();
+                //TODO А кто закрывает InputStream, который получился из webUtil.getStreamFromURL(url)?
                 InputStream picture = webUtil.getStreamFromURL(url);
                 Image img = new Image(picture, profile);
                 imageRepo.add(img);
@@ -117,7 +119,6 @@ public class Bot implements Runnable {
         while (true)
             if (profileRequests.size() != 0)
                 return profileRequests.poll();
-
+        //TODO Наверное, не стоит молотить в цикле. Обычно у потокобезопасных очередей есть методы, которые позволяют заблокироваться и ждать, пока не придут новые элементы
     }
-
 }

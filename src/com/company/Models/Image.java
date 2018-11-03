@@ -7,6 +7,7 @@ import java.nio.file.attribute.UserDefinedFileAttributeView;
 
 @Entity
 public class Image {
+    //TODO Как же так, приватные поля, а называются с большой буквы...
     @Id
     private String Id;
     private double Brightness;

@@ -17,7 +17,7 @@ public class WebUtil {
             URLConnection conn = url.openConnection();
             in = conn.getInputStream();
         } catch (IOException e) {
-            e.printStackTrace();
+            e.printStackTrace();//TODO Прямо видно, что вы используете лучшие практики логирования, прямо как я вам на паре показывал :)
         }
         return in;
     }
