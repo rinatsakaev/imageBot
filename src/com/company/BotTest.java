@@ -1,11 +1,6 @@
 package com.company;
-
-import com.company.Models.Profile;
 import junit.framework.TestCase;
-
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class BotTest extends TestCase {

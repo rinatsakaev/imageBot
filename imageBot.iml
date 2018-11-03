@@ -11,7 +11,7 @@
     <orderEntry type="library" name="org.hibernate:hibernate-core:5.3.6.Final" level="project" />
     <orderEntry type="library" name="org.apache.directory.studio:org.apache.commons.io:2.4" level="project" />
     <orderEntry type="library" name="postgresql:postgresql:9.1-901-1.jdbc4" level="project" />
-    <orderEntry type="library" name="opencv-343" level="project" />
+    <orderEntry type="library" name="opencv-343" level="application" />
     <orderEntry type="module-library">
       <library>
         <CLASSES>
@@ -21,5 +21,6 @@
         <SOURCES />
       </library>
     </orderEntry>
+    <orderEntry type="library" name="junit:junit:4.12" level="project" />
   </component>
 </module>
