@@ -55,7 +55,8 @@ public class GridFSUtil {
 
     private Properties getProperties(){
         Properties prop = new Properties();
-        try (InputStream output = new FileInputStream("META-INF/settings.cfg")) {
+        File file = new File("src\\META-INF\\settings.cfg");
+        try (InputStream output = new FileInputStream(file)){
             prop.load(output);
         } catch (IOException e) {
             logger.log(Level.ALL, "Can't read property file", e);
