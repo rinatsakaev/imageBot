@@ -6,7 +6,6 @@ public class Main {
 
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
-        Bot bot = null;
         Map<String, Bot> profileBot = new HashMap<>();
         List<Thread> threads = new ArrayList<>();
 
@@ -19,7 +18,7 @@ public class Main {
             }
 
             if (!profileBot.containsKey(login)) {
-                bot = new Bot(login);
+                Bot bot = new Bot(login);
                 Thread botThread = new Thread(bot);
                 botThread.start();
                 profileBot.put(login, bot);
@@ -29,7 +28,6 @@ public class Main {
             System.out.println("Введи сообщение");
             String message = sc.nextLine();
             profileBot.get(login).addToQueue(message);
-
         }
 
         for (Thread thread : threads) {

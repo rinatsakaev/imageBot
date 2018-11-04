@@ -1,5 +1,4 @@
 package com.company;
-
 import com.company.Helpers.GridFSUtil;
 import com.company.Helpers.OpenCVUtil;
 import com.company.Helpers.WebUtil;
@@ -7,12 +6,13 @@ import com.company.Models.Image;
 import com.company.Models.Profile;
 import com.company.Repos.ImageRepo;
 import com.company.Repos.ProfileRepo;
-
 import java.io.InputStream;
 import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Queue;
 
+
+//TODO Достаточно странный дизайн получился: ни действия просто не добавить, ни взаимодействие с пользователем не изолировано. При прикручивании телеграмма скорее всего придется полностью переделывать все.
 public class Bot implements Runnable {
     private IRepository<Profile> profileRepo;
     private IRepository<Image> imageRepo;
@@ -20,6 +20,7 @@ public class Bot implements Runnable {
     private WebUtil webUtil;
     private GridFSUtil gridFSUtil;
     private OpenCVUtil openCVUtil;
+    //TODO С очередью есть некоторая проблема. Вы добавляете из одного потока, который работает в Main, а удаляете из потока, в котором запущен бот. Вместо этого стоит воспользоваться какой-нибудь потокобезопасной очередью
     private Queue<String> profileRequests;
 
     public Bot(String login) {
@@ -42,10 +43,9 @@ public class Bot implements Runnable {
             try {
                 handleCommand(cmd);
             } catch (Exception e) {
-                e.printStackTrace();
+                break;
             }
         }
-
     }
 
 
@@ -78,27 +78,28 @@ public class Bot implements Runnable {
             case "cb":
                 System.out.println("Дай ссылку на картинку");
                 String url = waitForInput();
-                InputStream picture = webUtil.getStreamFromURL(url);
-                Image img = new Image(picture, profile);
-                imageRepo.add(img);
-                try {
-                    System.out.println("Круто. Теперь число от 1.0 до 3.0");
+                try(InputStream inputStream = webUtil.getStreamFromURL(url)) {
+                    Image img = new Image(inputStream, profile);
+                    imageRepo.add(img);
+                    try {
+                        System.out.println("Круто. Теперь число от 1.0 до 3.0");
 
-                    double brightness = Double.parseDouble(waitForInput());
-                    img.setBrightness(brightness);
+                        double brightness = Double.parseDouble(waitForInput());
+                        img.setBrightness(brightness);
 
-                    System.out.println("И еще одно от 0 до 100");
+                        System.out.println("И еще одно от 0 до 100");
 
-                    double contrast = Double.parseDouble(waitForInput());
-                    img.setContrast(contrast);
+                        double contrast = Double.parseDouble(waitForInput());
+                        img.setContrast(contrast);
 
-                } catch (Exception e) {
-                    System.out.println("Это не то число >:C");
+                    } catch (Exception e) {
+                        System.out.println("Это не то число >:C");
+                    }
+
+                    imageRepo.update(img);
+                    gridFSUtil.getFileById(img.getId());
+                    openCVUtil.changeBrightness(img.getId(), img.getBrightness(), img.getContrast());
                 }
-
-                imageRepo.update(img);
-                gridFSUtil.getFileById(img.getId());
-                openCVUtil.changeBrightness(img.getId(), img.getBrightness(), img.getContrast());
                 System.out.println("Картинка готова");
                 break;
             case "help":
@@ -117,7 +118,6 @@ public class Bot implements Runnable {
         while (true)
             if (profileRequests.size() != 0)
                 return profileRequests.poll();
-
+        //TODO Наверное, не стоит молотить в цикле. Обычно у потокобезопасных очередей есть методы, которые позволяют заблокироваться и ждать, пока не придут новые элементы
     }
-
 }

@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class WebUtil {
     public WebUtil() {
@@ -17,7 +19,7 @@ public class WebUtil {
             URLConnection conn = url.openConnection();
             in = conn.getInputStream();
         } catch (IOException e) {
-            e.printStackTrace();
+            Logger.getAnonymousLogger().log(Level.ALL, "Cant read stream from url", e);
         }
         return in;
     }
