@@ -1,5 +1,7 @@
 package com.company.Helpers;
-
+import java.io.*;
+import java.util.Properties;
+import java.util.logging.*;
 import com.mongodb.DB;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
@@ -9,19 +11,17 @@ import com.mongodb.gridfs.GridFSInputFile;
 import org.apache.commons.io.FileUtils;
 import org.bson.types.ObjectId;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-
 public class GridFSUtil {
     private DB database;
     private GridFS imageBucket;
-
+    private Logger logger = Logger.getAnonymousLogger();
+    private Properties properties;
     public GridFSUtil() {
-        MongoClientURI connectionString = new MongoClientURI("mongodb://root:root@localhost:27017/"); //TODO Этого хардкода тут быть не должно
+        properties = getProperties();
+        MongoClientURI connectionString = new MongoClientURI(properties.getProperty("MONGO_CONNECTION_STRING"));
         MongoClient mongoClient = new MongoClient(connectionString);
-        database = mongoClient.getDB("imagesdb"); //TODO Я бы не использовал deprecated API, а так же бы не делал суффикс db у имени базы данных
-        imageBucket = new GridFS(database, "images");
+        database = mongoClient.getDB(properties.getProperty("MONGO_DB_NAME"));
+        imageBucket = new GridFS(database, properties.getProperty("MONGO_BUCKET_NAME"));
     }
 
     public String uploadFile(InputStream is) {
@@ -42,12 +42,27 @@ public class GridFSUtil {
     public File getFileById(String id) {
         File file = new File(id);
         try {
-            //TODO А кто закрывает InputStream, который получился из getFileInputStream?
-            FileUtils.copyInputStreamToFile(getFileInputStream(id), file);
+            InputStream inputStream = getFileInputStream(id);
+            FileUtils.copyInputStreamToFile(inputStream, file);
+            inputStream.close();
         } catch (IOException e) {
-            e.printStackTrace(); //TODO Прямо видно, что вы используете лучшие практики логирования, прямо как я вам на паре показывал :)
+            e.printStackTrace();
+            String msg = String.format("Exception in getFileById, id=%s", id);
+            logger.log(Level.ALL, msg, e);
         }
         return file;
     }
+
+    private Properties getProperties(){
+        Properties prop = new Properties();
+        try (InputStream output = new FileInputStream("META-INF/settings.cfg")) {
+            prop.load(output);
+        } catch (IOException e) {
+            logger.log(Level.ALL, "Can't read property file", e);
+        }
+        return prop;
+    }
+
+
 
 }

@@ -1,5 +1,4 @@
 package com.company;
-
 import com.company.Helpers.GridFSUtil;
 import com.company.Helpers.OpenCVUtil;
 import com.company.Helpers.WebUtil;
@@ -7,11 +6,11 @@ import com.company.Models.Image;
 import com.company.Models.Profile;
 import com.company.Repos.ImageRepo;
 import com.company.Repos.ProfileRepo;
-
 import java.io.InputStream;
 import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Queue;
+
 
 //TODO Достаточно странный дизайн получился: ни действия просто не добавить, ни взаимодействие с пользователем не изолировано. При прикручивании телеграмма скорее всего придется полностью переделывать все.
 public class Bot implements Runnable {
@@ -44,7 +43,7 @@ public class Bot implements Runnable {
             try {
                 handleCommand(cmd);
             } catch (Exception e) {
-                e.printStackTrace(); //TODO Прямо видно, что вы используете лучшие практики логирования, прямо как я вам на паре показывал :)
+                break;
             }
         }
     }
@@ -79,28 +78,28 @@ public class Bot implements Runnable {
             case "cb":
                 System.out.println("Дай ссылку на картинку");
                 String url = waitForInput();
-                //TODO А кто закрывает InputStream, который получился из webUtil.getStreamFromURL(url)?
-                InputStream picture = webUtil.getStreamFromURL(url);
-                Image img = new Image(picture, profile);
-                imageRepo.add(img);
-                try {
-                    System.out.println("Круто. Теперь число от 1.0 до 3.0");
+                try(InputStream inputStream = webUtil.getStreamFromURL(url)) {
+                    Image img = new Image(inputStream, profile);
+                    imageRepo.add(img);
+                    try {
+                        System.out.println("Круто. Теперь число от 1.0 до 3.0");
 
-                    double brightness = Double.parseDouble(waitForInput());
-                    img.setBrightness(brightness);
+                        double brightness = Double.parseDouble(waitForInput());
+                        img.setBrightness(brightness);
 
-                    System.out.println("И еще одно от 0 до 100");
+                        System.out.println("И еще одно от 0 до 100");
 
-                    double contrast = Double.parseDouble(waitForInput());
-                    img.setContrast(contrast);
+                        double contrast = Double.parseDouble(waitForInput());
+                        img.setContrast(contrast);
 
-                } catch (Exception e) {
-                    System.out.println("Это не то число >:C");
+                    } catch (Exception e) {
+                        System.out.println("Это не то число >:C");
+                    }
+
+                    imageRepo.update(img);
+                    gridFSUtil.getFileById(img.getId());
+                    openCVUtil.changeBrightness(img.getId(), img.getBrightness(), img.getContrast());
                 }
-
-                imageRepo.update(img);
-                gridFSUtil.getFileById(img.getId());
-                openCVUtil.changeBrightness(img.getId(), img.getBrightness(), img.getContrast());
                 System.out.println("Картинка готова");
                 break;
             case "help":

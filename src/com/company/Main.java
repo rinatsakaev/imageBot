@@ -6,8 +6,6 @@ public class Main {
 
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
-        //TODO Не очень понятно, зачем эта переменная вынесена так высоко
-        Bot bot = null;
         Map<String, Bot> profileBot = new HashMap<>();
         List<Thread> threads = new ArrayList<>();
 
@@ -20,7 +18,7 @@ public class Main {
             }
 
             if (!profileBot.containsKey(login)) {
-                bot = new Bot(login);
+                Bot bot = new Bot(login);
                 Thread botThread = new Thread(bot);
                 botThread.start();
                 profileBot.put(login, bot);
