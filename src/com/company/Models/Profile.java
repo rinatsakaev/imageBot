@@ -8,7 +8,7 @@ public class Profile {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long Id;
-    //TODO Наверное, логин должен быть уникальным
+    @Column(unique = true)
     private String Login;
 
     @OneToMany(mappedBy = "Profile")

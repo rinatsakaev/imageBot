@@ -16,8 +16,6 @@
       <root url="jar://$MAVEN_REPOSITORY$/org/hibernate/common/hibernate-commons-annotations/5.0.4.Final/hibernate-commons-annotations-5.0.4.Final.jar!/" />
     </CLASSES>
     <JAVADOC />
-    <SOURCES>
-      <root url="jar://$USER_HOME$/.ideaLibSources/hibernate-core-5.3.6.Final-sources.jar!/" />
-    </SOURCES>
+    <SOURCES />
   </library>
 </component>
