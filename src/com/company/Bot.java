@@ -8,10 +8,9 @@ import Repos.ImageRepo;
 import Repos.ProfileRepo;
 import java.io.InputStream;
 import java.util.List;
-import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.SynchronousQueue;
 
-
-//TODO Достаточно странный дизайн получился: ни действия просто не добавить, ни взаимодействие с пользователем не изолировано. При прикручивании телеграмма скорее всего придется полностью переделывать все.
 public class Bot implements Runnable {
     private IRepository<Profile> profileRepo;
     private IRepository<Image> imageRepo;
@@ -19,15 +18,15 @@ public class Bot implements Runnable {
     private WebUtil webUtil;
     private GridFSUtil gridFSUtil;
     private OpenCVUtil openCVUtil;
-    private ConcurrentLinkedQueue<String> profileRequests;
+    private BlockingQueue<String> profileRequests;
 
     public Bot(String login) {
         webUtil = new WebUtil();
         gridFSUtil = new GridFSUtil();
         openCVUtil = new OpenCVUtil();
         profileRepo = new ProfileRepo();
-        imageRepo =  new ImageRepo();
-        profileRequests = new ConcurrentLinkedQueue<>();
+        imageRepo = new ImageRepo();
+        profileRequests = new SynchronousQueue<>();
         authorize(login);
     }
 
@@ -37,18 +36,18 @@ public class Bot implements Runnable {
                 "cb - обработать картинку\n" +
                 "help - вывести это сообщение еще раз");
         while (true) {
-            String cmd = waitForInput();
+            String cmd = null;
             try {
+                cmd = profileRequests.take();
                 handleCommand(cmd);
             } catch (Exception e) {
-                break;
+                e.printStackTrace();
             }
         }
     }
 
-
     public void addToQueue(String message) {
-        profileRequests.add(message);
+        profileRequests.offer(message);
     }
 
     private void authorize(String login) {
@@ -70,24 +69,24 @@ public class Bot implements Runnable {
                     System.out.println("Нет картинок");
                     break;
                 }
-                 for (Image img : profile.getImages())
+                for (Image img : profile.getImages())
                     System.out.println(img.getId());
                 break;
             case "cb":
                 System.out.println("Дай ссылку на картинку");
-                String url = waitForInput();
-                try(InputStream inputStream = webUtil.getStreamFromURL(url)) {
+                String url = profileRequests.take();
+                try (InputStream inputStream = webUtil.getStreamFromURL(url)) {
                     Image img = new Image(inputStream, profile);
                     imageRepo.add(img);
                     try {
                         System.out.println("Круто. Теперь число от 1.0 до 3.0");
 
-                        double brightness = Double.parseDouble(waitForInput());
+                        double brightness = Double.parseDouble(profileRequests.take());
                         img.setBrightness(brightness);
 
                         System.out.println("И еще одно от 0 до 100");
 
-                        double contrast = Double.parseDouble(waitForInput());
+                        double contrast = Double.parseDouble(profileRequests.take());
                         img.setContrast(contrast);
 
                     } catch (Exception e) {
@@ -110,12 +109,5 @@ public class Bot implements Runnable {
             default:
                 break;
         }
-    }
-
-    private String waitForInput() {
-        while (true)
-            if (profileRequests.size() != 0)
-                return profileRequests.poll();
-        //TODO Наверное, не стоит молотить в цикле. Обычно у потокобезопасных очередей есть методы, которые позволяют заблокироваться и ждать, пока не придут новые элементы
     }
 }
