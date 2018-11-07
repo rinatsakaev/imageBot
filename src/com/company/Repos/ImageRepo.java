@@ -1,11 +1,9 @@
-package com.company.Repos;
-import com.company.Helpers.GridFSUtil;
-import com.company.Helpers.HibernateUtil;
-import com.company.IRepository;
-import com.company.Models.Image;
+package Repos;
+import Helpers.GridFSUtil;
+import Helpers.HibernateUtil;
+import Models.Image;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;

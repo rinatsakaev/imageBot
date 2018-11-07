@@ -1,8 +1,7 @@
-package com.company.Repos;
+package Repos;
 
-import com.company.Helpers.HibernateUtil;
-import com.company.IRepository;
-import com.company.Models.Profile;
+import Helpers.HibernateUtil;
+import Models.Profile;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 

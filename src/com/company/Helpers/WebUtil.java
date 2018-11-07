@@ -1,4 +1,4 @@
-package com.company.Helpers;
+package Helpers;
 
 import java.io.IOException;
 import java.io.InputStream;

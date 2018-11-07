@@ -1,4 +1,4 @@
-package com.company.Models;
+package Models;
 
 import javax.persistence.*;
 import java.io.File;

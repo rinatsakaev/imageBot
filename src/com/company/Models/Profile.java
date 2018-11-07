@@ -1,4 +1,4 @@
-package com.company.Models;
+package Models;
 
 import javax.persistence.*;
 import java.util.List;
@@ -11,7 +11,7 @@ public class Profile {
     @Column(unique = true)
     private String Login;
 
-    @OneToMany(mappedBy = "Profile")
+    @OneToMany(mappedBy = "Profile", fetch = FetchType.EAGER)
     private List<Image> Images;
 
     public Profile() {
