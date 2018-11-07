@@ -8,8 +8,7 @@ import Repos.ImageRepo;
 import Repos.ProfileRepo;
 import java.io.InputStream;
 import java.util.List;
-import java.util.PriorityQueue;
-import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 
 //TODO Достаточно странный дизайн получился: ни действия просто не добавить, ни взаимодействие с пользователем не изолировано. При прикручивании телеграмма скорее всего придется полностью переделывать все.
@@ -20,8 +19,7 @@ public class Bot implements Runnable {
     private WebUtil webUtil;
     private GridFSUtil gridFSUtil;
     private OpenCVUtil openCVUtil;
-    //TODO С очередью есть некоторая проблема. Вы добавляете из одного потока, который работает в Main, а удаляете из потока, в котором запущен бот. Вместо этого стоит воспользоваться какой-нибудь потокобезопасной очередью
-    private Queue<String> profileRequests;
+    private ConcurrentLinkedQueue<String> profileRequests;
 
     public Bot(String login) {
         webUtil = new WebUtil();
@@ -29,7 +27,7 @@ public class Bot implements Runnable {
         openCVUtil = new OpenCVUtil();
         profileRepo = new ProfileRepo();
         imageRepo =  new ImageRepo();
-        profileRequests = new PriorityQueue<>();
+        profileRequests = new ConcurrentLinkedQueue<>();
         authorize(login);
     }
 
