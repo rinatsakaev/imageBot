@@ -1,6 +1,6 @@
-package com.company.Helpers;
+package Helpers;
+
 import org.opencv.core.Core;
-import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.imgcodecs.Imgcodecs;
 public class OpenCVUtil {

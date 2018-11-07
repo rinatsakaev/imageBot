@@ -1,11 +1,11 @@
-package com.company;
-import com.company.Helpers.GridFSUtil;
-import com.company.Helpers.OpenCVUtil;
-import com.company.Helpers.WebUtil;
-import com.company.Models.Image;
-import com.company.Models.Profile;
-import com.company.Repos.ImageRepo;
-import com.company.Repos.ProfileRepo;
+import Helpers.GridFSUtil;
+import Helpers.OpenCVUtil;
+import Helpers.WebUtil;
+import Repos.IRepository;
+import Models.Image;
+import Models.Profile;
+import Repos.ImageRepo;
+import Repos.ProfileRepo;
 import java.io.InputStream;
 import java.util.List;
 import java.util.PriorityQueue;
@@ -28,7 +28,7 @@ public class Bot implements Runnable {
         gridFSUtil = new GridFSUtil();
         openCVUtil = new OpenCVUtil();
         profileRepo = new ProfileRepo();
-        imageRepo = new ImageRepo();
+        imageRepo =  new ImageRepo();
         profileRequests = new PriorityQueue<>();
         authorize(login);
     }
@@ -72,7 +72,7 @@ public class Bot implements Runnable {
                     System.out.println("Нет картинок");
                     break;
                 }
-                for (Image img : profile.getImages())
+                 for (Image img : profile.getImages())
                     System.out.println(img.getId());
                 break;
             case "cb":

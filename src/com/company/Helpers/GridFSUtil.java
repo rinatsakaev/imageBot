@@ -1,4 +1,5 @@
-package com.company.Helpers;
+package Helpers;
+
 import java.io.*;
 import java.util.Properties;
 import java.util.logging.*;
@@ -55,7 +56,7 @@ public class GridFSUtil {
 
     private Properties getProperties(){
         Properties prop = new Properties();
-        File file = new File("src\\META-INF\\settings.cfg");
+        File file = new File("src/main/resources/settings.cfg");
         try (InputStream output = new FileInputStream(file)){
             prop.load(output);
         } catch (IOException e) {
