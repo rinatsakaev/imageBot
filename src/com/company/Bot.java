@@ -41,7 +41,7 @@ public class Bot implements Runnable {
                 cmd = profileRequests.take();
                 handleCommand(cmd);
             } catch (Exception e) {
-                e.printStackTrace();
+                break;
             }
         }
     }
