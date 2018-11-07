@@ -3,6 +3,7 @@ package Helpers;
 import java.io.*;
 import java.util.Properties;
 import java.util.logging.*;
+
 import com.mongodb.DB;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
@@ -17,6 +18,7 @@ public class GridFSUtil {
     private GridFS imageBucket;
     private Logger logger = Logger.getAnonymousLogger();
     private Properties properties;
+
     public GridFSUtil() {
         properties = getProperties();
         MongoClientURI connectionString = new MongoClientURI(properties.getProperty("MONGO_CONNECTION_STRING"));
@@ -54,17 +56,16 @@ public class GridFSUtil {
         return file;
     }
 
-    private Properties getProperties(){
+    private Properties getProperties() {
         Properties prop = new Properties();
         File file = new File("src/main/resources/settings.cfg");
-        try (InputStream output = new FileInputStream(file)){
+        try (InputStream output = new FileInputStream(file)) {
             prop.load(output);
         } catch (IOException e) {
             logger.log(Level.ALL, "Can't read property file", e);
         }
         return prop;
     }
-
 
 
 }

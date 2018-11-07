@@ -7,42 +7,42 @@ import java.util.List;
 public class Profile {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private Long Id;
+    private Long id;
     @Column(unique = true)
-    private String Login;
+    private String login;
 
     @OneToMany(mappedBy = "Profile", fetch = FetchType.EAGER)
-    private List<Image> Images;
+    private List<Image> images;
 
     public Profile() {
 
     }
 
     public Profile(String login) {
-        Login = login;
+        this.login = login;
     }
 
     public Long getId() {
-        return Id;
+        return id;
     }
 
     public void setId(Long id) {
-        Id = id;
+        this.id = id;
     }
 
     public List<Image> getImages() {
-        return Images;
+        return images;
     }
 
     public void setImages(List<Image> images) {
-        Images = images;
+        this.images = images;
     }
 
     public String getLogin() {
-        return Login;
+        return login;
     }
 
     public void setLogin(String login) {
-        Login = login;
+        this.login = login;
     }
 }

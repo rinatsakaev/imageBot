@@ -96,8 +96,8 @@ public class Bot implements Runnable {
                     imageRepo.update(img);
                     gridFSUtil.getFileById(img.getId());
                     openCVUtil.changeBrightness(img.getId(), img.getBrightness(), img.getContrast());
+                    System.out.println("Картинка готова");
                 }
-                System.out.println("Картинка готова");
                 break;
             case "help":
                 System.out.println("Команды: ls - показать загруженные картинки\n" +

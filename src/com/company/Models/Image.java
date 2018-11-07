@@ -7,11 +7,10 @@ import java.nio.file.attribute.UserDefinedFileAttributeView;
 
 @Entity
 public class Image {
-    //TODO Как же так, приватные поля, а называются с большой буквы...
     @Id
-    private String Id;
-    private double Brightness;
-    private double Contrast;
+    private String id;
+    private double brightness;
+    private double contrast;
 
     @Transient
     private InputStream InputStream;
@@ -30,29 +29,24 @@ public class Image {
     }
 
     public double getBrightness() {
-        return Brightness;
+        return brightness;
     }
 
     public void setBrightness(double brightness) {
-        Brightness = brightness;
+        this.brightness = brightness;
     }
 
-    public double getContrast() {
-        return Contrast;
-    }
+    public double getContrast() { return contrast; }
 
     public void setContrast(double contrast) {
-        Contrast = contrast;
+        this.contrast = contrast;
     }
 
     public String getId() {
-        return Id;
+        return id;
     }
 
-    public void setId(String id) {
-        Id = id;
-    }
-
+    public void setId(String id) { this.id = id; }
 
     public Profile getProfile() {
         return Profile;
