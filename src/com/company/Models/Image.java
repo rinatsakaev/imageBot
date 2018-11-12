@@ -1,9 +1,7 @@
 package Models;
 
 import javax.persistence.*;
-import java.io.File;
 import java.io.InputStream;
-import java.nio.file.attribute.UserDefinedFileAttributeView;
 
 @Entity
 public class Image {
@@ -13,19 +11,19 @@ public class Image {
     private double contrast;
 
     @Transient
-    private InputStream InputStream;
+    private InputStream inputStream;
 
     @ManyToOne
     @JoinColumn(name = "User_Id", nullable = false)
-    private Profile Profile;
+    private Profile profile;
 
     public Image() {
 
     }
 
     public Image(InputStream is, Profile profile) {
-        InputStream = is;
-        Profile = profile;
+        inputStream = is;
+        this.profile = profile;
     }
 
     public double getBrightness() {
@@ -49,18 +47,18 @@ public class Image {
     public void setId(String id) { this.id = id; }
 
     public Profile getProfile() {
-        return Profile;
+        return profile;
     }
 
     public void setProfile(Profile profile) {
-        Profile = profile;
+        this.profile = profile;
     }
 
     public java.io.InputStream getInputStream() {
-        return InputStream;
+        return inputStream;
     }
 
     public void setInputStream(java.io.InputStream inputStream) {
-        InputStream = inputStream;
+        this.inputStream = inputStream;
     }
 }
