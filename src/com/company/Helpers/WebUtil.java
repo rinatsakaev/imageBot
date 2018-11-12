@@ -7,11 +7,12 @@ import java.net.URLConnection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public final class WebUtil {
+public class WebUtil {
     public WebUtil() {
+
     }
 
-    public static InputStream getStreamFromURL(String inputUrl) {
+    public InputStream getStreamFromURL(String inputUrl) {
         InputStream in = null;
         try {
             URL url = new URL(inputUrl);
