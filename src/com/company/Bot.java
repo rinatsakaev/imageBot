@@ -15,13 +15,11 @@ public class Bot implements Runnable {
     private IRepository<Profile> profileRepo;
     private IRepository<Image> imageRepo;
     private Profile profile;
-    private WebUtil webUtil;
     private GridFSUtil gridFSUtil;
     private OpenCVUtil openCVUtil;
     private BlockingQueue<String> profileRequests;
 
     public Bot(String login) {
-        webUtil = new WebUtil();
         gridFSUtil = new GridFSUtil();
         openCVUtil = new OpenCVUtil();
         profileRepo = new ProfileRepo();
@@ -75,7 +73,7 @@ public class Bot implements Runnable {
             case "cb":
                 System.out.println("Дай ссылку на картинку");
                 String url = profileRequests.take();
-                try (InputStream inputStream = webUtil.getStreamFromURL(url)) {
+                try (InputStream inputStream = WebUtil.getStreamFromURL(url)) {
                     Image img = new Image(inputStream, profile);
                     imageRepo.add(img);
                     try {
