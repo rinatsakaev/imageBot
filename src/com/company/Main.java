@@ -8,7 +8,7 @@ public class Main extends ListenerAdapter {
 
     public static void main(String[] args){
         JDABuilder jda = new JDABuilder(AccountType.BOT);
-        jda.setToken("NTA2NTE3NDQ5NzUyMTgyODE1.DtRlCw.I2puMyJH5hIcKQ2rdDSyBaGiO9g");
+        jda.setToken("");
         jda.setAudioEnabled(false);
         Bot bot = new Bot();
         jda.addEventListener(bot);
