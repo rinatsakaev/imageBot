@@ -10,33 +10,35 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.SynchronousQueue;
+import net.dv8tion.jda.core.entities.Message;
+import net.dv8tion.jda.core.entities.impl.MessageImpl;
+import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
-public class Bot implements Runnable {
+import java.io.File;
+
+public class Bot extends ListenerAdapter implements Runnable{
     private IRepository<Profile> profileRepo;
     private IRepository<Image> imageRepo;
     private Profile profile;
+    private WebUtil webUtil;
     private GridFSUtil gridFSUtil;
     private OpenCVUtil openCVUtil;
-    private BlockingQueue<String> profileRequests;
+    private BlockingQueue<MessageReceivedEvent> profileRequests;
 
-    public Bot(String login) {
+    public Bot() {
         gridFSUtil = new GridFSUtil();
         openCVUtil = new OpenCVUtil();
         profileRepo = new ProfileRepo();
         imageRepo = new ImageRepo();
         profileRequests = new SynchronousQueue<>();
-        authorize(login);
     }
 
     @Override
     public void run() {
-        System.out.println("Команды: ls - показать загруженные картинки\n" +
-                "cb - обработать картинку\n" +
-                "help - вывести это сообщение еще раз");
         while (true) {
-            String cmd = null;
             try {
-                cmd = profileRequests.take();
+                MessageReceivedEvent cmd = profileRequests.take();
                 handleCommand(cmd);
             } catch (Exception e) {
                 break;
@@ -44,8 +46,16 @@ public class Bot implements Runnable {
         }
     }
 
-    public void addToQueue(String message) {
+    public void addToQueue(MessageReceivedEvent message) {
         profileRequests.offer(message);
+    }
+
+    public void onMessageReceived(MessageReceivedEvent e){
+        if (e.getMessage().getContent().startsWith("!")){
+            authorize(e.getAuthor().getName());
+            profileRequests.add(e);
+        }
+
     }
 
     private void authorize(String login) {
@@ -60,47 +70,50 @@ public class Bot implements Runnable {
         }
     }
 
-    private void handleCommand(String command) throws Exception {
+    private void handleCommand(MessageReceivedEvent e) throws Exception {
+        String command = e.getMessage().getContent().substring(1);
         switch (command) {
             case "ls":
                 if (profile.getImages() == null) {
-                    System.out.println("Нет картинок");
+                    e.getChannel().sendMessage("Нет картинок").queue();
                     break;
                 }
                 for (Image img : profile.getImages())
-                    System.out.println(img.getId());
+                    e.getChannel().sendMessage(img.getId()).queue();
                 break;
             case "cb":
-                System.out.println("Дай ссылку на картинку");
-                String url = profileRequests.take();
+                e.getChannel().sendMessage("Дай ссылку на картинку").queue();
+                String url = profileRequests.take().getMessage().getContent().substring(1);
                 try (InputStream inputStream = WebUtil.getStreamFromURL(url)) {
                     Image img = new Image(inputStream, profile);
                     imageRepo.add(img);
                     try {
-                        System.out.println("Круто. Теперь число от 1.0 до 3.0");
+                        e.getChannel().sendMessage("Круто. Теперь число от 1.0 до 3.0").queue();
 
-                        double brightness = Double.parseDouble(profileRequests.take());
+                        String bright = profileRequests.take().getMessage().getContent().substring(1);
+                        double brightness = Double.parseDouble(bright);
                         img.setBrightness(brightness);
 
-                        System.out.println("И еще одно от 0 до 100");
+                        e.getChannel().sendMessage("И еще одно от 0 до 100").queue();;
 
-                        double contrast = Double.parseDouble(profileRequests.take());
+                        String contr = profileRequests.take().getMessage().getContent().substring(1);
+                        double contrast = Double.parseDouble(contr);
                         img.setContrast(contrast);
 
-                    } catch (Exception e) {
-                        System.out.println("Это не то число >:C");
+                    } catch (Exception exc) {
+                        e.getChannel().sendMessage("Это не то число >:C").queue();
                     }
-
                     imageRepo.update(img);
                     gridFSUtil.getFileById(img.getId());
                     openCVUtil.changeBrightness(img.getId(), img.getBrightness(), img.getContrast());
-                    System.out.println("Картинка готова");
+                    File file = new File("output.jpg");
+                    e.getChannel().sendFile(file, e.getChannel().sendMessage("Картинка готова").complete()).queue();
                 }
                 break;
             case "help":
-                System.out.println("Команды: ls - показать загруженные картинки\n" +
+                e.getChannel().sendMessage("Команды: ls - показать загруженные картинки\n" +
                         "cb - обработать картинку\n" +
-                        "help - вывести это сообщение еще раз");
+                        "help - вывести это сообщение еще раз").queue();
                 break;
             case "exit":
                 throw new Exception("Exit");
