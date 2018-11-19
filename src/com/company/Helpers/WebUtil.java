@@ -13,16 +13,15 @@ public final class WebUtil {
     }
 
     public static InputStream getStreamFromURL(String inputUrl) {
-
+        InputStream in = null;
         try {
-
             URL url = new URL(inputUrl);
             URLConnection conn = url.openConnection();
-            return conn.getInputStream();
+            in = conn.getInputStream();
         } catch (IOException e) {
             Logger.getAnonymousLogger().log(Level.ALL, "Cant read stream from url", e);
         }
-
+        return in;
     }
 
 }
