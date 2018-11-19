@@ -47,8 +47,10 @@ public class GridFSUtil {
         try {
             InputStream inputStream = getFileInputStream(id);
             FileUtils.copyInputStreamToFile(inputStream, file);
+            //TODO В try-finally же надо закрывать :(
             inputStream.close();
         } catch (IOException e) {
+            //TODO Вы так и настаиваете на том, чтобы печатать стэктрейс в stderr? :)
             e.printStackTrace();
             String msg = String.format("Exception in getFileById, id=%s", id);
             logger.log(Level.ALL, msg, e);
@@ -62,6 +64,7 @@ public class GridFSUtil {
         try (InputStream output = new FileInputStream(file)) {
             prop.load(output);
         } catch (IOException e) {
+            //TODO Наверное, проглатывать ошибки в данном случае не самая хорошая стратегия
             logger.log(Level.ALL, "Can't read property file", e);
         }
         return prop;

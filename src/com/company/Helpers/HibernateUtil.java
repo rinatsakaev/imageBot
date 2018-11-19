@@ -32,5 +32,3 @@ public final class HibernateUtil {
         return factory.openSession();
     }
 }
-
-

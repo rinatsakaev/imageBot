@@ -19,17 +19,17 @@ public class ImageRepo implements IRepository<Image> {
     }
 
     public List<Image> getAll() {
-        List<Image> images = null;
         try (Session session = HibernateUtil.getInstance().getSession()) {
-            images = (List<Image>) session.createQuery("FROM " + clsName).list();
+            List<Image> images = (List<Image>) session.createQuery("FROM " + clsName).list();
             for (Image img : images)
                 try(InputStream inputStream = gridFSUtil.getFileInputStream(img.getId())){
                     img.setInputStream(inputStream);
                 } catch (IOException e) {
+                    //TODO Наверное, проглатывать ошибки в данном случае не самая хорошая стратегия
                     Logger.getAnonymousLogger().log(Level.ALL, "Cant open img inputstream", e);
                 }
+            return images;
         }
-        return images;
     }
 
     public long getCount() {
@@ -39,16 +39,16 @@ public class ImageRepo implements IRepository<Image> {
     }
 
     public Image getRandom() {
-        Image img = null;
         try(Session session = HibernateUtil.getInstance().getSession()){
-            img = (Image) session.createQuery("FROM " + clsName + " ORDER BY RANDOM()").list().get(0);
+            Image img = (Image) session.createQuery("FROM " + clsName + " ORDER BY RANDOM()").list().get(0);
             try(InputStream inputStream = gridFSUtil.getFileInputStream(img.getId())){
                 img.setInputStream(inputStream);
             } catch (IOException e) {
+                //TODO Наверное, проглатывать ошибки в данном случае не самая хорошая стратегия
                 Logger.getAnonymousLogger().log(Level.ALL, "Cant open img inputstream", e);
             }
+            return img;
         }
-        return img;
     }
 
 
@@ -70,6 +70,7 @@ public class ImageRepo implements IRepository<Image> {
                 String id = gridFSUtil.uploadFile(inputStream);
                 item.setId(id);
             } catch (IOException e) {
+                //TODO Наверное, проглатывать ошибки в данном случае не самая хорошая стратегия
                 Logger.getAnonymousLogger().log(Level.ALL, "Cant open img inputstream", e);
             }
             session.persist(item);
