@@ -46,7 +46,7 @@ public class Bot extends ListenerAdapter implements Runnable{
         }
     }
 
-    public void addToQueue(MessageReceivedEvent message) {
+    public void addCommand(MessageReceivedEvent message) {
         profileRequests.offer(message);
     }
 
@@ -58,7 +58,7 @@ public class Bot extends ListenerAdapter implements Runnable{
 
     }
 
-    private void authorize(String login) {
+    public void authorize(String login) {
         List<Profile> profiles = profileRepo.getAll();
         for (Profile user : profiles) {
             if (user.getLogin().equals(login))

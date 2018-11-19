@@ -26,4 +26,8 @@ dependencies {
     compile("net.dv8tion:JDA:3.3.0_265")
     compile("org.apache.commons:commons-lang3:3.6")
     compile("mysql:mysql-connector-java:5.1.34")
+    compile("org.mongodb:mongo-java-driver:3.8.2")
+    compile("postgresql:postgresql:9.1-901-1.jdbc4")
+    compile("junit:junit:4.12")
+    compile("org.hibernate:hibernate-core:5.3.6.Final")
 }
