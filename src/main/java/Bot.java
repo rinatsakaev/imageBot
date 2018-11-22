@@ -6,10 +6,13 @@ import Models.Image;
 import Models.Profile;
 import Repos.ImageRepo;
 import Repos.ProfileRepo;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import sx.blah.discord.api.events.EventSubscriber;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import java.io.InputStream;
 import java.util.List;
+import java.io.IOException;
 
 
 import java.io.File;
@@ -23,13 +26,15 @@ public class Bot implements Runnable{
     private GridFSUtil gridFSUtil;
     private OpenCVUtil openCVUtil;
     private BlockingQueue<MessageReceivedEvent> profileRequests;
+    private Logger logger;
 
-    public Bot() {
+    public Bot() throws IOException {
         gridFSUtil = new GridFSUtil();
         openCVUtil = new OpenCVUtil();
         profileRepo = new ProfileRepo();
         imageRepo = new ImageRepo();
         profileRequests = new SynchronousQueue<>();
+        logger = LogManager.getRootLogger();
     }
 
     @Override
@@ -69,41 +74,10 @@ public class Bot implements Runnable{
         String command = e.getMessage().getContent().substring(1);
         switch (command) {
             case "ls":
-                if (profile.getImages().size() == 0) {
-                    e.getChannel().sendMessage("Нет картинок");
-                    break;
-                }
-                for (Image img : profile.getImages())
-                    e.getChannel().sendMessage(img.getId());
+                listImages(e);
                 break;
             case "cb":
-                e.getChannel().sendMessage("Дай ссылку на картинку");
-                String url = profileRequests.take().getMessage().getContent().substring(1);
-                try (InputStream inputStream = WebUtil.getStreamFromURL(url)) {
-                    Image img = new Image(inputStream, profile);
-                    imageRepo.add(img);
-                    try {
-                        e.getChannel().sendMessage("Круто. Теперь число от 1.0 до 3.0");
-
-                        String bright = profileRequests.take().getMessage().getContent().substring(1);
-                        double brightness = Double.parseDouble(bright);
-                        img.setBrightness(brightness);
-
-                        e.getChannel().sendMessage("И еще одно от 0 до 100");
-
-                        String contr = profileRequests.take().getMessage().getContent().substring(1);
-                        double contrast = Double.parseDouble(contr);
-                        img.setContrast(contrast);
-
-                    } catch (Exception exc) {
-                        e.getChannel().sendMessage("Это не то число >:C");
-                    }
-                    imageRepo.update(img);
-                    gridFSUtil.getFileById(img.getId());
-                    openCVUtil.changeBrightness(img.getId(), img.getBrightness(), img.getContrast());
-                    File file = new File("output.jpg");
-                    e.getChannel().sendFile("Картинка готова", file);
-                }
+                changeBrightness(e);
                 break;
             case "help":
                 e.getChannel().sendMessage("Команды: ls - показать загруженные картинки\n" +
@@ -114,6 +88,43 @@ public class Bot implements Runnable{
                 throw new Exception("Exit");
             default:
                 break;
+        }
+    }
+    private void listImages(MessageReceivedEvent e) {
+        if (profile.getImages().size() == 0) {
+            e.getChannel().sendMessage("Нет картинок");
+            return;
+        }
+        for (Image img : profile.getImages())
+            e.getChannel().sendMessage(img.getId());
+    }
+
+    private void changeBrightness(MessageReceivedEvent e) throws InterruptedException {
+        e.getChannel().sendMessage("Дай ссылку на картинку");
+        String url = profileRequests.take().getMessage().getContent().substring(1);
+        try (InputStream inputStream = WebUtil.getStreamFromURL(url)) {
+            Image img = new Image(inputStream, profile);
+            imageRepo.add(img);
+            try {
+                e.getChannel().sendMessage("Круто. Теперь число от 1.0 до 3.0");
+                String bright = profileRequests.take().getMessage().getContent().substring(1);
+                double brightness = Double.parseDouble(bright);
+                img.setBrightness(brightness);
+                e.getChannel().sendMessage("И еще одно от 0 до 100");
+                String contr = profileRequests.take().getMessage().getContent().substring(1);
+                double contrast = Double.parseDouble(contr);
+                img.setContrast(contrast);
+            } catch (Exception exc) {
+                e.getChannel().sendMessage("Это не то число >:C");
+            }
+            imageRepo.update(img);
+            gridFSUtil.getFileById(img.getId());
+            openCVUtil.changeBrightness(img.getId(), img.getBrightness(), img.getContrast());
+            File file = new File("output.jpg");
+            e.getChannel().sendFile("Картинка готова", file);
+        } catch (IOException exception){
+            e.getChannel().sendMessage("Не могу прочитать картинку");
+            logger.info("Cant read image", exception);
         }
     }
 }
