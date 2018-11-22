@@ -2,8 +2,8 @@ package Helpers;
 
 import java.io.*;
 import java.util.Properties;
-import java.util.logging.*;
-
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import com.mongodb.DB;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
@@ -16,10 +16,10 @@ import org.bson.types.ObjectId;
 public class GridFSUtil {
     private DB database;
     private GridFS imageBucket;
-    private Logger logger = Logger.getAnonymousLogger();
+    private Logger logger = LogManager.getRootLogger();
     private Properties properties;
 
-    public GridFSUtil() {
+    public GridFSUtil() throws IOException  {
         properties = getProperties();
         MongoClientURI connectionString = new MongoClientURI(properties.getProperty("MONGO_CONNECTION_STRING"));
         MongoClient mongoClient = new MongoClient(connectionString);
@@ -44,30 +44,22 @@ public class GridFSUtil {
 
     public File getFileById(String id) {
         File file = new File(id);
-        try {
-            InputStream inputStream = getFileInputStream(id);
+        try(InputStream inputStream = getFileInputStream(id)) {
             FileUtils.copyInputStreamToFile(inputStream, file);
-            //TODO В try-finally же надо закрывать :(
-            inputStream.close();
         } catch (IOException e) {
-            //TODO Вы так и настаиваете на том, чтобы печатать стэктрейс в stderr? :)
-            e.printStackTrace();
             String msg = String.format("Exception in getFileById, id=%s", id);
-            logger.log(Level.ALL, msg, e);
+            logger.info(this.getClass() + "\n" + msg + "\n" + e.getMessage());
         }
         return file;
     }
 
-    private Properties getProperties() {
+    private Properties getProperties() throws IOException {
         Properties prop = new Properties();
         File file = new File("src/main/resources/settings.cfg");
         try (InputStream output = new FileInputStream(file)) {
             prop.load(output);
-        } catch (IOException e) {
-            //TODO Наверное, проглатывать ошибки в данном случае не самая хорошая стратегия
-            logger.log(Level.ALL, "Can't read property file", e);
+            return prop;
         }
-        return prop;
     }
 
 

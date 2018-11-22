@@ -2,19 +2,20 @@ package Repos;
 import Helpers.GridFSUtil;
 import Helpers.HibernateUtil;
 import Models.Image;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class ImageRepo implements IRepository<Image> {
     private String clsName = "Image";
     private GridFSUtil gridFSUtil;
+    private Logger logger = LogManager.getRootLogger();
 
-    public ImageRepo() {
+    public ImageRepo() throws IOException {
         gridFSUtil = new GridFSUtil();
     }
 
@@ -25,8 +26,7 @@ public class ImageRepo implements IRepository<Image> {
                 try(InputStream inputStream = gridFSUtil.getFileInputStream(img.getId())){
                     img.setInputStream(inputStream);
                 } catch (IOException e) {
-                    //TODO Наверное, проглатывать ошибки в данном случае не самая хорошая стратегия
-                    Logger.getAnonymousLogger().log(Level.ALL, "Cant open img inputstream", e);
+                    logger.info(this.getClass() + "\nCant open img inputstream\n" + e.getMessage());
                 }
             return images;
         }
@@ -44,8 +44,7 @@ public class ImageRepo implements IRepository<Image> {
             try(InputStream inputStream = gridFSUtil.getFileInputStream(img.getId())){
                 img.setInputStream(inputStream);
             } catch (IOException e) {
-                //TODO Наверное, проглатывать ошибки в данном случае не самая хорошая стратегия
-                Logger.getAnonymousLogger().log(Level.ALL, "Cant open img inputstream", e);
+                logger.info(this.getClass() + "\nCant open img inputstream\n" + e.getMessage());
             }
             return img;
         }
@@ -70,8 +69,7 @@ public class ImageRepo implements IRepository<Image> {
                 String id = gridFSUtil.uploadFile(inputStream);
                 item.setId(id);
             } catch (IOException e) {
-                //TODO Наверное, проглатывать ошибки в данном случае не самая хорошая стратегия
-                Logger.getAnonymousLogger().log(Level.ALL, "Cant open img inputstream", e);
+                logger.info(this.getClass() + "\nCant open img inputstream\n" + e.getMessage());
             }
             session.persist(item);
             tx.commit();
