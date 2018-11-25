@@ -11,7 +11,7 @@ import java.io.InputStream;
 
 public class SaveImageCommand implements ICommand {
     @Override
-    public void execute(MessageReceivedEvent event, Profile profile, IRepository repository) {
+    public ICommand execute(MessageReceivedEvent event, Profile profile, IRepository repository) {
         String url = event.getMessage().getContent().substring(1);
         try (InputStream inputStream = WebUtil.getStreamFromURL(url)) {
             Image img = new Image(inputStream, profile);
@@ -20,5 +20,7 @@ public class SaveImageCommand implements ICommand {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        event.getChannel().sendMessage("Круто. Теперь число от 1.0 до 3.0");
+        return new SaveBrightnessCommand();
     }
 }

@@ -1,5 +1,6 @@
 package Commands;
 
+import Helpers.GridFSUtil;
 import Helpers.OpenCVUtil;
 import Models.Image;
 import Models.Profile;
@@ -12,10 +13,10 @@ import java.util.List;
 
 public class ReturnImageCommand implements ICommand {
     @Override
-    public void execute(MessageReceivedEvent event, Profile profile, IRepository repository) {
+    public ICommand execute(MessageReceivedEvent event, Profile profile, IRepository repository) {
         List<Image> images = profile.getImages();
         Image image = images.get(images.size()-1);
-        OpenCVUtil openCVUtil = new OpenCVUtil();
+         OpenCVUtil openCVUtil = new OpenCVUtil();
         openCVUtil.changeBrightness(image.getId(), image.getBrightness(), image.getContrast());
         File file = new File("output.jpg");
         try {
@@ -23,5 +24,6 @@ public class ReturnImageCommand implements ICommand {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
+       return null;
     }
 }

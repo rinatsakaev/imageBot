@@ -7,12 +7,14 @@ import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedE
 
 public class ListCommand implements ICommand {
     @Override
-    public void execute(MessageReceivedEvent event, Profile profile, IRepository repository) {
+    public ICommand execute(MessageReceivedEvent event, Profile profile, IRepository repository) {
         if (profile.getImages().size() == 0) {
             event.getChannel().sendMessage("Нет картинок");
-            return;
+            return null;
         }
         for (Image img : profile.getImages())
             event.getChannel().sendMessage(img.getId());
+       return null;
+
     }
 }

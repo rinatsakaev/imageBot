@@ -6,7 +6,8 @@ import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedE
 
 public class RequestImageCommand implements ICommand{
     @Override
-    public void execute(MessageReceivedEvent event, Profile profile, IRepository repository) {
+    public ICommand execute(MessageReceivedEvent event, Profile profile, IRepository repository) {
         event.getChannel().sendMessage("Дай ссылку на картинку");
+        return new SaveImageCommand();
     }
 }

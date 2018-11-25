@@ -7,7 +7,8 @@ import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedE
 public class ExitCommand implements ICommand {
 
     @Override
-    public void execute(MessageReceivedEvent event, Profile profile, IRepository repository) {
+    public ICommand execute(MessageReceivedEvent event, Profile profile, IRepository repository) {
         event.getChannel().sendMessage("Пока-пока");
+        return null;
     }
 }
