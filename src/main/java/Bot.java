@@ -54,9 +54,7 @@ public class Bot implements Runnable{
     @EventSubscriber
     public void onMessageReceived(MessageReceivedEvent e){
         if (e.getMessage().getContent().startsWith("!")){
-            //TODO Не очень понятно, почему getName можно использовать для уникальной идентификации пользоваля
-            //Потому что в документации сказано, что этот метод возвращает username, который в Дискорде уникален.
-            authorize(e.getAuthor().getName());
+            authorize(e.getAuthor().getStringID());
             //TODO Не очень понятно, почему MessageReceivedEvent можно передавать в другой поток :)
             profileRequests.add(e);
         }
@@ -107,6 +105,7 @@ public class Bot implements Runnable{
     private void changeBrightness(MessageReceivedEvent e) throws InterruptedException {
         //TODO Хотелось бы, чтобы диалог с пользователем шел через несколько вызовов onMessageReceived и состояние между ними где-от хранилось
         //TODO Сейчас у вас все написано уж очень неявно, а почему вы вообще можете через изначальный e.getChannel что-то посылать клиенту - большой вопрос :)
+        //Указано в документации ^
         e.getChannel().sendMessage("Дай ссылку на картинку");
         String url = profileRequests.take().getMessage().getContent().substring(1);
         try (InputStream inputStream = WebUtil.getStreamFromURL(url)) {
@@ -122,7 +121,7 @@ public class Bot implements Runnable{
                 double contrast = Double.parseDouble(contr);
                 img.setContrast(contrast);
             } catch (Exception exc) {
-                //TODO Наверное стоит логировать? А то малоли развалилось не потому, что это не число.
+                logger.warn(exc);
                 e.getChannel().sendMessage("Это не то число >:C");
             }
             imageRepo.update(img);
