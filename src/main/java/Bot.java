@@ -45,7 +45,7 @@ public class Bot implements Runnable{
                 MessageReceivedEvent cmd = profileRequests.take();
                 handleCommand(cmd);
             } catch (Exception e) {
-                //TODO Наверное стоит логировать? :)
+                logger.info(String.format("Пользователь %s ввел exit", profile.getLogin()));
                 break;
             }
         }
@@ -55,6 +55,7 @@ public class Bot implements Runnable{
     public void onMessageReceived(MessageReceivedEvent e){
         if (e.getMessage().getContent().startsWith("!")){
             //TODO Не очень понятно, почему getName можно использовать для уникальной идентификации пользоваля
+            //Потому что в документации сказано, что этот метод возвращает username, который в Дискорде уникален.
             authorize(e.getAuthor().getName());
             //TODO Не очень понятно, почему MessageReceivedEvent можно передавать в другой поток :)
             profileRequests.add(e);
