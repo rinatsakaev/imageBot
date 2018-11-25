@@ -50,7 +50,7 @@ public class Bot implements Runnable {
             try {
                 MessageReceivedEvent event = profileRequests.take();
                 String message = event.getMessage().getContent();
-                if (currentState == null && commandMap.containsKey(message))
+                if (currentState == null || commandMap.containsKey(message))
                     currentState = commandMap.get(message);
                 currentState = currentState.execute(event, profile, imageRepo);
             } catch (Exception e) {
