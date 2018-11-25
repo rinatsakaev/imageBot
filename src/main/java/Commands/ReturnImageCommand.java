@@ -16,7 +16,7 @@ public class ReturnImageCommand implements ICommand {
     public ICommand execute(MessageReceivedEvent event, Profile profile, IRepository repository) {
         List<Image> images = profile.getImages();
         Image image = images.get(images.size()-1);
-         OpenCVUtil openCVUtil = new OpenCVUtil();
+        OpenCVUtil openCVUtil = new OpenCVUtil();
         openCVUtil.changeBrightness(image.getId(), image.getBrightness(), image.getContrast());
         File file = new File("output.jpg");
         try {

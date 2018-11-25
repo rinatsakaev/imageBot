@@ -12,7 +12,7 @@ import java.io.InputStream;
 public class SaveImageCommand implements ICommand {
     @Override
     public ICommand execute(MessageReceivedEvent event, Profile profile, IRepository repository) {
-        String url = event.getMessage().getContent().substring(1);
+        String url = event.getMessage().getContent();
         try (InputStream inputStream = WebUtil.getStreamFromURL(url)) {
             Image img = new Image(inputStream, profile);
             repository.add(img);
