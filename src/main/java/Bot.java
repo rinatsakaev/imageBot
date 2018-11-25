@@ -107,25 +107,25 @@ public class Bot implements Runnable{
         //TODO Сейчас у вас все написано уж очень неявно, а почему вы вообще можете через изначальный e.getChannel что-то посылать клиенту - большой вопрос :)
         //Указано в документации ^
         e.getChannel().sendMessage("Дай ссылку на картинку");
-        String url = profileRequests.take().getMessage().getContent().substring(1);
+        e = profileRequests.take();
+        String url = e.getMessage().getContent().substring(1);
         try (InputStream inputStream = WebUtil.getStreamFromURL(url)) {
             Image img = new Image(inputStream, profile);
             imageRepo.add(img);
             try {
                 e.getChannel().sendMessage("Круто. Теперь число от 1.0 до 3.0");
-                String bright = profileRequests.take().getMessage().getContent().substring(1);
-                double brightness = Double.parseDouble(bright);
+                e = profileRequests.take();
+                double brightness = Double.parseDouble(e.getMessage().getContent().substring(1));
                 img.setBrightness(brightness);
                 e.getChannel().sendMessage("И еще одно от 0 до 100");
-                String contr = profileRequests.take().getMessage().getContent().substring(1);
-                double contrast = Double.parseDouble(contr);
+                e = profileRequests.take();
+                double contrast = Double.parseDouble(e.getMessage().getContent().substring(1));
                 img.setContrast(contrast);
             } catch (Exception exc) {
                 logger.warn(exc);
                 e.getChannel().sendMessage("Это не то число >:C");
             }
             imageRepo.update(img);
-            gridFSUtil.getFileById(img.getId());
             openCVUtil.changeBrightness(img.getId(), img.getBrightness(), img.getContrast());
             File file = new File("output.jpg");
             e.getChannel().sendFile("Картинка готова", file);
