@@ -57,8 +57,7 @@ public class Bot implements Runnable {
 
     @EventSubscriber
     public void onMessageReceived(MessageReceivedEvent e) {
-        if (profile == null)
-            authorize(e.getAuthor().getStringID());
+        authorize(e.getAuthor().getStringID());
         //TODO Не очень понятно, почему MessageReceivedEvent можно передавать в другой поток :)
         profileRequests.add(e);
     }
