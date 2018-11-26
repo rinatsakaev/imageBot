@@ -1,6 +1,4 @@
 import Commands.*;
-import Helpers.GridFSUtil;
-import Helpers.OpenCVUtil;
 import Repos.IRepository;
 import Models.Image;
 import Models.Profile;
@@ -8,11 +6,9 @@ import Repos.ImageRepo;
 import Repos.ProfileRepo;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.bytedeco.javacpp.presets.opencv_core;
 import sx.blah.discord.api.events.EventSubscriber;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 
-import java.util.Dictionary;
 import java.util.HashMap;
 import java.util.List;
 import java.io.IOException;
@@ -52,7 +48,7 @@ public class Bot implements Runnable {
                 String message = event.getMessage().getContent();
                 if (currentState == null || commandMap.containsKey(message))
                     currentState = commandMap.get(message);
-                currentState = currentState.execute(event, profile, imageRepo);
+                currentState = currentState.execute(event, profile, imageRepo, );
             } catch (Exception e) {
                 logger.info(e);
             }
