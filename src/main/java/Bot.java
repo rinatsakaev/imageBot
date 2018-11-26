@@ -48,7 +48,7 @@ public class Bot implements Runnable {
                 String message = event.getMessage().getContent();
                 if (currentState == null || commandMap.containsKey(message))
                     currentState = commandMap.get(message);
-                currentState = currentState.execute(event, profile, imageRepo, );
+                currentState = currentState.execute(event, profile, imageRepo, logger);
             } catch (Exception e) {
                 logger.info(e);
             }
