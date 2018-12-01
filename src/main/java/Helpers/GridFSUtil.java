@@ -19,6 +19,7 @@ public class GridFSUtil {
     private Logger logger = LogManager.getRootLogger();
     private Properties properties;
 
+    //TODO Настройки лучше принимать в конструкторе, а вычитывать их в месте создания GridFSUtil.
     public GridFSUtil() throws IOException  {
         properties = getProperties();
         MongoClientURI connectionString = new MongoClientURI(properties.getProperty("MONGO_CONNECTION_STRING"));
@@ -47,6 +48,11 @@ public class GridFSUtil {
         try(InputStream inputStream = getFileInputStream(id)) {
             FileUtils.copyInputStreamToFile(inputStream, file);
         } catch (IOException e) {
+            //TODO Нужно использовать именнованный логер вместо конкатенации getClass в сообщение
+            //TODO Нужно передавать exception напрямую в подсистему логирования, а не конкатенировать мессадж в сообщение, так как этим вы теряете стэктрейс
+            //TODO Не очень понятно, почему уровень логирования info
+            //TODO Конкретно в этом месте лучше пробрасывать исключение наверх
+
             String msg = String.format("Exception in getFileById, id=%s", id);
             logger.info(this.getClass() + "\n" + msg + "\n" + e.getMessage());
         }

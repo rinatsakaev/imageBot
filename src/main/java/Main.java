@@ -15,6 +15,7 @@ public class Main {
             botThread.start();
             dispatcher.registerListener(bot);
         } catch (IOException e) {
+            //TODO Уровень логирования слишком маленький. Почитайте, пожалуйста, про них и выберите правильный
             logger.info("Something is wrong with bot", e);
         }
     }

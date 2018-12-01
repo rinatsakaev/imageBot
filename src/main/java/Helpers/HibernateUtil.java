@@ -34,6 +34,7 @@ public final class HibernateUtil {
                     instance = new HibernateUtil();
                 }
                 catch (FileNotFoundException e){
+                    //TODO WTF?!
                     System.out.println("n found");
                 }
             }

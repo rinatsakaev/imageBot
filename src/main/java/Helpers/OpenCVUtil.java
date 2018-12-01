@@ -17,6 +17,7 @@ public class OpenCVUtil {
             GridFSUtil util = new GridFSUtil();
             util.getFileById(filename);
         } catch (IOException e) {
+            //TODO WTF?!
             e.printStackTrace();
         }
         Mat source = Imgcodecs.imread(filename, Imgcodecs.CV_LOAD_IMAGE_COLOR);

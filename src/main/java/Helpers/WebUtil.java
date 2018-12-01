@@ -8,6 +8,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 public final class WebUtil {
+    //TODO Зачем тут нужен пустой конструктор?
     public WebUtil() {
 
     }

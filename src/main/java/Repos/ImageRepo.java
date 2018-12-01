@@ -26,6 +26,11 @@ public class ImageRepo implements IRepository<Image> {
                 try(InputStream inputStream = gridFSUtil.getFileInputStream(img.getId())){
                     img.setInputStream(inputStream);
                 } catch (IOException e) {
+                    //TODO Нужно использовать именнованный логер вместо конкатенации getClass в сообщение
+                    //TODO Нужно передавать exception напрямую в подсистему логирования, а не конкатенировать в сообщение, так как этим вы теряете стэктрейс
+                    //TODO Не очень понятно, почему уровень логирования info
+                    //TODO Конкретно в этом месте лучше пробрасывать исключение наверх
+
                     logger.info(this.getClass() + "\nCant open img inputstream\n" + e.getMessage());
                 }
             return images;
@@ -44,6 +49,11 @@ public class ImageRepo implements IRepository<Image> {
             try(InputStream inputStream = gridFSUtil.getFileInputStream(img.getId())){
                 img.setInputStream(inputStream);
             } catch (IOException e) {
+                //TODO Нужно использовать именнованный логер вместо конкатенации getClass в сообщение
+                //TODO Нужно передавать exception напрямую в подсистему логирования, а не конкатенировать в сообщение, так как этим вы теряете стэктрейс
+                //TODO Не очень понятно, почему уровень логирования info
+                //TODO Конкретно в этом месте лучше пробрасывать исключение наверх
+
                 logger.info(this.getClass() + "\nCant open img inputstream\n" + e.getMessage());
             }
             return img;
@@ -69,6 +79,11 @@ public class ImageRepo implements IRepository<Image> {
                 String id = gridFSUtil.uploadFile(inputStream);
                 item.setId(id);
             } catch (IOException e) {
+                //TODO Нужно использовать именнованный логер вместо конкатенации getClass в сообщение
+                //TODO Нужно передавать exception напрямую в подсистему логирования, а не конкатенировать в сообщение, так как этим вы теряете стэктрейс
+                //TODO Не очень понятно, почему уровень логирования info
+                //TODO Конкретно в этом месте лучше пробрасывать исключение наверх
+
                 logger.info(this.getClass() + "\nCant open img inputstream\n" + e.getMessage());
             }
             session.persist(item);

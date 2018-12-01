@@ -50,6 +50,7 @@ public class Bot implements Runnable {
                     currentState = commandMap.get(message);
                 currentState = currentState.execute(event, profile, imageRepo, logger);
             } catch (Exception e) {
+                //TODO Почему уровень info?
                 logger.info(e);
             }
         }
