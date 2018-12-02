@@ -1,1 +1,28 @@
-.
+2018-12-02 19:22:11.437 [Event Dispatcher Handler] INFO  org.hibernate.Version - HHH000412: Hibernate Core {5.3.6.Final}
+2018-12-02 19:22:11.440 [Event Dispatcher Handler] INFO  org.hibernate.cfg.Environment - HHH000206: hibernate.properties not found
+2018-12-02 19:22:11.743 [Event Dispatcher Handler] INFO  org.hibernate.annotations.common.Version - HCANN000001: Hibernate Commons Annotations {5.0.4.Final}
+2018-12-02 19:22:11.857 [Event Dispatcher Handler] WARN  org.hibernate.orm.connections.pooling - HHH10001002: Using Hibernate built-in connection pool (not for production use!)
+2018-12-02 19:22:11.866 [Event Dispatcher Handler] INFO  org.hibernate.orm.connections.pooling - HHH10001005: using driver [org.postgresql.Driver] at URL [jdbc:postgresql://localhost:5432/postgres]
+2018-12-02 19:22:11.867 [Event Dispatcher Handler] INFO  org.hibernate.orm.connections.pooling - HHH10001001: Connection properties: {password=****, profile=postgres}
+2018-12-02 19:22:11.867 [Event Dispatcher Handler] INFO  org.hibernate.orm.connections.pooling - HHH10001003: Autocommit mode: false
+2018-12-02 19:22:11.871 [Event Dispatcher Handler] INFO  org.hibernate.engine.jdbc.connections.internal.DriverManagerConnectionProviderImpl - HHH000115: Hibernate connection pool size: 20 (min=1)
+2018-12-02 19:22:11.961 [Event Dispatcher Handler] INFO  org.hibernate.dialect.Dialect - HHH000400: Using dialect: org.hibernate.dialect.PostgreSQL94Dialect
+2018-12-02 19:22:12.163 [Event Dispatcher Handler] INFO  org.hibernate.engine.jdbc.env.internal.LobCreatorBuilderImpl - HHH000424: Disabling contextual LOB creation as createClob() method threw error : java.lang.reflect.InvocationTargetException
+2018-12-02 19:22:12.173 [Event Dispatcher Handler] INFO  org.hibernate.type.BasicTypeRegistry - HHH000270: Type registration [java.util.UUID] overrides previous : org.hibernate.type.UUIDBinaryType@6c8b00
+2018-12-02 19:22:12.872 [Event Dispatcher Handler] INFO  org.hibernate.orm.connections.access - HHH10001501: Connection obtained from JdbcConnectionAccess [org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator$ConnectionProviderJdbcConnectionAccess@14df698] for (non-JTA) DDL execution was not in auto-commit mode; the Connection 'local transaction' will be committed and the Connection will be set into auto-commit mode.
+2018-12-02 19:22:13.052 [Event Dispatcher Handler] INFO  org.hibernate.hql.internal.QueryTranslatorFactoryInitiator - HHH000397: Using ASTQueryTranslatorFactory
+2018-12-02 19:22:15.391 [Thread-12] INFO  Bot - java.net.MalformedURLException: no protocol: a
+2018-12-02 19:22:55.472 [Event Dispatcher Handler] INFO  org.hibernate.Version - HHH000412: Hibernate Core {5.3.6.Final}
+2018-12-02 19:22:55.476 [Event Dispatcher Handler] INFO  org.hibernate.cfg.Environment - HHH000206: hibernate.properties not found
+2018-12-02 19:22:55.770 [Event Dispatcher Handler] INFO  org.hibernate.annotations.common.Version - HCANN000001: Hibernate Commons Annotations {5.0.4.Final}
+2018-12-02 19:22:55.904 [Event Dispatcher Handler] WARN  org.hibernate.orm.connections.pooling - HHH10001002: Using Hibernate built-in connection pool (not for production use!)
+2018-12-02 19:22:55.913 [Event Dispatcher Handler] INFO  org.hibernate.orm.connections.pooling - HHH10001005: using driver [org.postgresql.Driver] at URL [jdbc:postgresql://localhost:5432/postgres]
+2018-12-02 19:22:55.914 [Event Dispatcher Handler] INFO  org.hibernate.orm.connections.pooling - HHH10001001: Connection properties: {password=****, profile=postgres}
+2018-12-02 19:22:55.914 [Event Dispatcher Handler] INFO  org.hibernate.orm.connections.pooling - HHH10001003: Autocommit mode: false
+2018-12-02 19:22:55.916 [Event Dispatcher Handler] INFO  org.hibernate.engine.jdbc.connections.internal.DriverManagerConnectionProviderImpl - HHH000115: Hibernate connection pool size: 20 (min=1)
+2018-12-02 19:22:56.013 [Event Dispatcher Handler] INFO  org.hibernate.dialect.Dialect - HHH000400: Using dialect: org.hibernate.dialect.PostgreSQL94Dialect
+2018-12-02 19:22:56.192 [Event Dispatcher Handler] INFO  org.hibernate.engine.jdbc.env.internal.LobCreatorBuilderImpl - HHH000424: Disabling contextual LOB creation as createClob() method threw error : java.lang.reflect.InvocationTargetException
+2018-12-02 19:22:56.198 [Event Dispatcher Handler] INFO  org.hibernate.type.BasicTypeRegistry - HHH000270: Type registration [java.util.UUID] overrides previous : org.hibernate.type.UUIDBinaryType@16eb7f2
+2018-12-02 19:22:56.897 [Event Dispatcher Handler] INFO  org.hibernate.orm.connections.access - HHH10001501: Connection obtained from JdbcConnectionAccess [org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator$ConnectionProviderJdbcConnectionAccess@c145cd] for (non-JTA) DDL execution was not in auto-commit mode; the Connection 'local transaction' will be committed and the Connection will be set into auto-commit mode.
+2018-12-02 19:22:57.088 [Event Dispatcher Handler] INFO  org.hibernate.hql.internal.QueryTranslatorFactoryInitiator - HHH000397: Using ASTQueryTranslatorFactory
+2018-12-02 19:22:58.870 [Thread-12] INFO  Bot - java.net.MalformedURLException: no protocol: nidam

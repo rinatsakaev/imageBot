@@ -13,25 +13,21 @@ import java.util.List;
 public class ImageRepo implements IRepository<Image> {
     private String clsName = "Image";
     private GridFSUtil gridFSUtil;
-    private Logger logger = LogManager.getRootLogger();
+    private Logger logger = LogManager.getLogger("ImageRepo");
 
     public ImageRepo() throws IOException {
         gridFSUtil = new GridFSUtil();
     }
 
-    public List<Image> getAll() {
+    public List<Image> getAll() throws IOException {
         try (Session session = HibernateUtil.getInstance().getSession()) {
             List<Image> images = (List<Image>) session.createQuery("FROM " + clsName).list();
             for (Image img : images)
                 try(InputStream inputStream = gridFSUtil.getFileInputStream(img.getId())){
                     img.setInputStream(inputStream);
                 } catch (IOException e) {
-                    //TODO Нужно использовать именнованный логер вместо конкатенации getClass в сообщение
-                    //TODO Нужно передавать exception напрямую в подсистему логирования, а не конкатенировать в сообщение, так как этим вы теряете стэктрейс
-                    //TODO Не очень понятно, почему уровень логирования info
-                    //TODO Конкретно в этом месте лучше пробрасывать исключение наверх
-
-                    logger.info(this.getClass() + "\nCant open img inputstream\n" + e.getMessage());
+                    logger.debug(e);
+                    throw e;
                 }
             return images;
         }
@@ -43,18 +39,14 @@ public class ImageRepo implements IRepository<Image> {
         }
     }
 
-    public Image getRandom() {
+    public Image getRandom() throws IOException {
         try(Session session = HibernateUtil.getInstance().getSession()){
             Image img = (Image) session.createQuery("FROM " + clsName + " ORDER BY RANDOM()").list().get(0);
             try(InputStream inputStream = gridFSUtil.getFileInputStream(img.getId())){
                 img.setInputStream(inputStream);
             } catch (IOException e) {
-                //TODO Нужно использовать именнованный логер вместо конкатенации getClass в сообщение
-                //TODO Нужно передавать exception напрямую в подсистему логирования, а не конкатенировать в сообщение, так как этим вы теряете стэктрейс
-                //TODO Не очень понятно, почему уровень логирования info
-                //TODO Конкретно в этом месте лучше пробрасывать исключение наверх
-
-                logger.info(this.getClass() + "\nCant open img inputstream\n" + e.getMessage());
+                logger.debug(e);
+                throw e;
             }
             return img;
         }
@@ -72,19 +64,15 @@ public class ImageRepo implements IRepository<Image> {
     }
 
 
-    public void add(Image item) {
+    public void add(Image item) throws IOException {
         try(Session session = HibernateUtil.getInstance().getSession()) {
             Transaction tx = session.beginTransaction();
             try(InputStream inputStream = item.getInputStream()){
                 String id = gridFSUtil.uploadFile(inputStream);
                 item.setId(id);
             } catch (IOException e) {
-                //TODO Нужно использовать именнованный логер вместо конкатенации getClass в сообщение
-                //TODO Нужно передавать exception напрямую в подсистему логирования, а не конкатенировать в сообщение, так как этим вы теряете стэктрейс
-                //TODO Не очень понятно, почему уровень логирования info
-                //TODO Конкретно в этом месте лучше пробрасывать исключение наверх
-
-                logger.info(this.getClass() + "\nCant open img inputstream\n" + e.getMessage());
+                logger.debug(e);
+                throw e;
             }
             session.persist(item);
             tx.commit();
