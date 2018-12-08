@@ -16,9 +16,10 @@ import org.bson.types.ObjectId;
 public class GridFSUtil {
     private DB database;
     private GridFS imageBucket;
-    private Logger logger = LogManager.getRootLogger();
+    private Logger logger = LogManager.getLogger("GridFSUtil");
     private Properties properties;
 
+    //TODO Настройки лучше принимать в конструкторе, а вычитывать их в месте создания GridFSUtil.
     public GridFSUtil() throws IOException  {
         properties = getProperties();
         MongoClientURI connectionString = new MongoClientURI(properties.getProperty("MONGO_CONNECTION_STRING"));
@@ -42,13 +43,13 @@ public class GridFSUtil {
         return imageForOutput.getInputStream();
     }
 
-    public File getFileById(String id) {
+    public File getFileById(String id) throws IOException {
         File file = new File(id);
         try(InputStream inputStream = getFileInputStream(id)) {
             FileUtils.copyInputStreamToFile(inputStream, file);
         } catch (IOException e) {
-            String msg = String.format("Exception in getFileById, id=%s", id);
-            logger.info(this.getClass() + "\n" + msg + "\n" + e.getMessage());
+            logger.debug(e);
+            throw e;
         }
         return file;
     }

@@ -3,26 +3,45 @@
     <Properties>
         <Property name="log-path">src/main/java/logs/</Property>
     </Properties>
+
     <Appenders>
         <Console name="Console" target="SYSTEM_OUT">
             <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
         </Console>
 
-        <File name="log" fileName="${log-path}/info.log" immediateFlush="true">
+        <File name="File" fileName="${log-path}/info.log" immediateFlush="true">
             <PatternLayout pattern="%d{yyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
         </File>
     </Appenders>
 
     <Loggers>
-        <Logger name= "ru.javastudy.examples.User" level="debug" additivity="true">
-            <AppenderRef ref="Console"/>
+        <Logger name="GridFSUtil" level="debug" additivity="false">
+            <AppenderRef ref="File"/>
+        </Logger>
+
+        <Logger name="ImageRepo" level="debug" additivity="false">
+            <AppenderRef ref="File"/>
+        </Logger>
+
+        <Logger name="OpenCVUtil" level="debug" additivity="false">
+            <AppenderRef ref="File"/>
+        </Logger>
+
+        <Logger name="HibernateUtil" level="debug" additivity="false">
+            <AppenderRef ref="File"/>
+        </Logger>
+
+        <Logger name="DiscordClient" level="debug" additivity="false">
+            <AppenderRef ref="File"/>
+        </Logger>
+
+        <Logger name="Bot" level="debug" additivity="false">
+            <AppenderRef ref="File"/>
         </Logger>
 
         <!-- Root Logger -->
         <Root level="INFO">
-            <AppenderRef ref="log"/>
+            <AppenderRef ref="File"/>
         </Root>
     </Loggers>
-
-
 </Configuration>

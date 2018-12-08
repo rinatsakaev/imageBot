@@ -31,8 +31,7 @@ public class Bot implements Runnable {
         profileRepo = new ProfileRepo();
         imageRepo = new ImageRepo();
         profileRequests = new SynchronousQueue<>();
-        //TODO Мне нужно, чтобы вы объяснили мне разницу между LogManager.getLogger("Bot") и  LogManager.getRootLogger()
-        logger = LogManager.getRootLogger();
+        logger = LogManager.getLogger("Bot");
         commandMap = new HashMap<String, ICommand>() {{
             put("ls", new ListCommand());
             put("cb", new RequestImageCommand());
@@ -50,19 +49,23 @@ public class Bot implements Runnable {
                     currentState = commandMap.get(message);
                 currentState = currentState.execute(event, profile, imageRepo, logger);
             } catch (Exception e) {
-                logger.info(e);
+                logger.debug(e);
             }
         }
     }
 
     @EventSubscriber
     public void onMessageReceived(MessageReceivedEvent e) {
-        authorize(e.getAuthor().getStringID());
+        try {
+            authorize(e.getAuthor().getStringID());
+        } catch (Exception exc) {
+            logger.debug(exc);
+        }
         //TODO Не очень понятно, почему MessageReceivedEvent можно передавать в другой поток :)
         profileRequests.add(e);
     }
 
-    private void authorize(String login) {
+    private void authorize(String login) throws Exception{
         List<Profile> profiles = profileRepo.getAll();
         for (Profile user : profiles) {
             if (user.getLogin().equals(login))

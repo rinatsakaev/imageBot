@@ -2,6 +2,8 @@ package Helpers;
 
 import Models.Image;
 import Models.Profile;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
@@ -20,10 +22,10 @@ public final class HibernateUtil {
             throw new FileNotFoundException("File not found");
 
 
-            this.configuration.configure(f);
-            this.configuration.addAnnotatedClass(Profile.class);
-            this.configuration.addAnnotatedClass(Image.class);
-            this.factory = configuration.buildSessionFactory();
+        this.configuration.configure(f);
+        this.configuration.addAnnotatedClass(Profile.class);
+        this.configuration.addAnnotatedClass(Image.class);
+        this.factory = configuration.buildSessionFactory();
 
     }
 
@@ -34,7 +36,8 @@ public final class HibernateUtil {
                     instance = new HibernateUtil();
                 }
                 catch (FileNotFoundException e){
-                    System.out.println("n found");
+                    Logger logger = LogManager.getLogger("HibernateUtil");
+                    logger.debug(e);
                 }
             }
         }
