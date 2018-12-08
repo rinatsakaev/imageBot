@@ -15,27 +15,27 @@
     </Appenders>
 
     <Loggers>
-        <Logger name="GridFSUtil" level="debug" additivity="false">
+        <Logger name="GridFSUtil" level="warn" additivity="false">
             <AppenderRef ref="File"/>
         </Logger>
 
-        <Logger name="ImageRepo" level="debug" additivity="false">
+        <Logger name="ImageRepo" level="warn" additivity="false">
             <AppenderRef ref="File"/>
         </Logger>
 
-        <Logger name="OpenCVUtil" level="debug" additivity="false">
+        <Logger name="OpenCVUtil" level="warn" additivity="false">
             <AppenderRef ref="File"/>
         </Logger>
 
-        <Logger name="HibernateUtil" level="debug" additivity="false">
+        <Logger name="HibernateUtil" level="warn" additivity="false">
             <AppenderRef ref="File"/>
         </Logger>
 
-        <Logger name="DiscordClient" level="debug" additivity="false">
+        <Logger name="DiscordClient" level="warn" additivity="false">
             <AppenderRef ref="File"/>
         </Logger>
 
-        <Logger name="Bot" level="debug" additivity="false">
+        <Logger name="Bot" level="warn" additivity="false">
             <AppenderRef ref="File"/>
         </Logger>
 

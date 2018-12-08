@@ -5,6 +5,8 @@ import Models.Image;
 import Models.Profile;
 import Repos.IRepository;
 import org.apache.logging.log4j.Logger;
+import org.opencv.core.Mat;
+import org.opencv.imgcodecs.Imgcodecs;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 
 import java.io.File;
@@ -17,12 +19,14 @@ public class ReturnImageCommand implements ICommand {
         List<Image> images = profile.getImages();
         Image image = images.get(images.size()-1);
         OpenCVUtil openCVUtil = new OpenCVUtil();
-        openCVUtil.changeBrightness(image.getId(), image.getBrightness(), image.getContrast());
-        File file = new File("output.jpg");
+        Mat outputImage = openCVUtil.changeBrightness(image.getId(), image.getBrightness(), image.getContrast());
+        Imgcodecs.imwrite("tmp.jpg", outputImage);
         try {
+            File file = new File("tmp.jpg");
             event.getChannel().sendFile("Картинка готова", file);
+            file.delete();
         } catch (FileNotFoundException e) {
-            logger.info(e);
+            logger.warn(e);
         }
        return null;
     }

@@ -5,18 +5,14 @@ import sx.blah.discord.api.IDiscordClient;
 import sx.blah.discord.util.DiscordException;
 
 public class DiscordClient {
-    public static IDiscordClient createClient(String token, boolean login) {
+    public static IDiscordClient createClient(String token) {
         ClientBuilder clientBuilder = new ClientBuilder();
         clientBuilder.withToken(token);
         try {
-            if (login) {
-                return clientBuilder.login();
-            } else {
-                return clientBuilder.build();
-            }
+            return clientBuilder.login();
         } catch (DiscordException e) {
             Logger logger = LogManager.getLogger("DiscordClient");
-            logger.debug(e);
+            logger.fatal(e);
             throw e;
         }
     }

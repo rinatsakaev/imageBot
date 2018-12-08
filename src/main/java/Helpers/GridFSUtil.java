@@ -48,7 +48,7 @@ public class GridFSUtil {
         try(InputStream inputStream = getFileInputStream(id)) {
             FileUtils.copyInputStreamToFile(inputStream, file);
         } catch (IOException e) {
-            logger.debug(e);
+            logger.warn(e);
             throw e;
         }
         return file;

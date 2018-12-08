@@ -49,7 +49,7 @@ public class Bot implements Runnable {
                     currentState = commandMap.get(message);
                 currentState = currentState.execute(event, profile, imageRepo, logger);
             } catch (Exception e) {
-                logger.debug(e);
+                logger.warn(e);
             }
         }
     }
@@ -59,7 +59,7 @@ public class Bot implements Runnable {
         try {
             authorize(e.getAuthor().getStringID());
         } catch (Exception exc) {
-            logger.debug(exc);
+            logger.fatal(exc);
         }
         //TODO Не очень понятно, почему MessageReceivedEvent можно передавать в другой поток :)
         profileRequests.add(e);

@@ -37,7 +37,7 @@ public final class HibernateUtil {
                 }
                 catch (FileNotFoundException e){
                     Logger logger = LogManager.getLogger("HibernateUtil");
-                    logger.debug(e);
+                    logger.fatal(e);
                 }
             }
         }
