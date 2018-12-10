@@ -19,11 +19,12 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.SynchronousQueue;
 
 public class Bot implements Runnable {
+    private static final Logger logger = LogManager.getLogger("Bot");
+
     private IRepository<Profile> profileRepo;
     private IRepository<Image> imageRepo;
     private Profile profile;
     private BlockingQueue<MessageReceivedEvent> profileRequests;
-    private Logger logger;
     private ICommand currentState;
     private Map<String, ICommand> commandMap;
 
@@ -31,7 +32,6 @@ public class Bot implements Runnable {
         profileRepo = new ProfileRepo();
         imageRepo = new ImageRepo();
         profileRequests = new SynchronousQueue<>();
-        logger = LogManager.getLogger("Bot");
         commandMap = new HashMap<String, ICommand>() {{
             put("ls", new ListCommand());
             put("cb", new RequestImageCommand());
@@ -47,8 +47,11 @@ public class Bot implements Runnable {
                 String message = event.getMessage().getContent();
                 if (currentState == null || commandMap.containsKey(message))
                     currentState = commandMap.get(message);
+                //TODO Не просовывать imageRepo аргументом
+                //TODO Не просовывать logger аргументами
                 currentState = currentState.execute(event, profile, imageRepo, logger);
             } catch (Exception e) {
+                //TODO А пользователю то не надо сказать, что произошла ошибка?
                 logger.warn(e);
             }
         }
@@ -61,7 +64,7 @@ public class Bot implements Runnable {
         } catch (Exception exc) {
             logger.fatal(exc);
         }
-        //TODO Не очень понятно, почему MessageReceivedEvent можно передавать в другой поток :)
+        //TODO Наверное, если прозошла ошибка при авторизации, то не надо это сообщение обрабатывать дальше
         profileRequests.add(e);
     }
 

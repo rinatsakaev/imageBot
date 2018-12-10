@@ -15,30 +15,6 @@
     </Appenders>
 
     <Loggers>
-        <Logger name="GridFSUtil" level="warn" additivity="false">
-            <AppenderRef ref="File"/>
-        </Logger>
-
-        <Logger name="ImageRepo" level="warn" additivity="false">
-            <AppenderRef ref="File"/>
-        </Logger>
-
-        <Logger name="OpenCVUtil" level="warn" additivity="false">
-            <AppenderRef ref="File"/>
-        </Logger>
-
-        <Logger name="HibernateUtil" level="warn" additivity="false">
-            <AppenderRef ref="File"/>
-        </Logger>
-
-        <Logger name="DiscordClient" level="warn" additivity="false">
-            <AppenderRef ref="File"/>
-        </Logger>
-
-        <Logger name="Bot" level="warn" additivity="false">
-            <AppenderRef ref="File"/>
-        </Logger>
-
         <!-- Root Logger -->
         <Root level="INFO">
             <AppenderRef ref="File"/>

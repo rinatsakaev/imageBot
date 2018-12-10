@@ -19,6 +19,7 @@ public class SaveImageCommand implements ICommand {
             repository.add(img);
             repository.update(img);
         } catch (IOException e) {
+            //TODO Надо не проглатывать исключение, а пробрасывать наверх
             logger.warn(e);
         }
         event.getChannel().sendMessage("Круто. Теперь число от 1.0 до 3.0");

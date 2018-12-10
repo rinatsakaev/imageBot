@@ -24,6 +24,7 @@ public class ReturnImageCommand implements ICommand {
         try {
             File file = new File("tmp.jpg");
             event.getChannel().sendFile("Картинка готова", file);
+            //TODO А что если sendFile выкинул исключение?
             file.delete();
         } catch (FileNotFoundException e) {
             logger.warn(e);

@@ -16,6 +16,7 @@ public class SaveContrastCommand implements ICommand {
         double contrast = Double.parseDouble(event.getMessage().getContent());
         image.setContrast(contrast);
         repository.update(image);
+        //TODO Надо возвращать ReturnImageCommand, а не исполнять ее по месту
         new ReturnImageCommand().execute(event, profile, repository, logger);
         return null;
     }
