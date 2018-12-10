@@ -33,9 +33,9 @@ public class Bot implements Runnable {
         imageRepo = new ImageRepo();
         profileRequests = new SynchronousQueue<>();
         commandMap = new HashMap<String, ICommand>() {{
-            put("ls", new ListCommand());
-            put("cb", new RequestImageCommand());
-            put("help", new HelpCommand());
+            put("ls", new ListCommand(imageRepo));
+            put("cb", new RequestImageCommand(imageRepo));
+            put("help", new HelpCommand(imageRepo));
         }};
     }
 
@@ -47,11 +47,17 @@ public class Bot implements Runnable {
                 String message = event.getMessage().getContent();
                 if (currentState == null || commandMap.containsKey(message))
                     currentState = commandMap.get(message);
-                //TODO Не просовывать imageRepo аргументом
-                //TODO Не просовывать logger аргументами
-                currentState = currentState.execute(event, profile, imageRepo, logger);
-            } catch (Exception e) {
-                //TODO А пользователю то не надо сказать, что произошла ошибка?
+                try{
+                    if (currentState == null){
+                        event.getChannel().sendMessage("Неизвестная команда");
+                        continue;
+                    }
+                    currentState = currentState.execute(event, profile);
+                } catch (IOException e){
+                    event.getChannel().sendMessage("Произошла ошибка");
+                    logger.warn(e);
+                }
+            } catch (InterruptedException e) {
                 logger.warn(e);
             }
         }
@@ -61,11 +67,10 @@ public class Bot implements Runnable {
     public void onMessageReceived(MessageReceivedEvent e) {
         try {
             authorize(e.getAuthor().getStringID());
+            profileRequests.add(e);
         } catch (Exception exc) {
             logger.fatal(exc);
         }
-        //TODO Наверное, если прозошла ошибка при авторизации, то не надо это сообщение обрабатывать дальше
-        profileRequests.add(e);
     }
 
     private void authorize(String login) throws Exception{

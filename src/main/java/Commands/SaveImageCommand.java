@@ -10,19 +10,20 @@ import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedE
 import java.io.IOException;
 import java.io.InputStream;
 
-public class SaveImageCommand implements ICommand {
+public class SaveImageCommand extends AbstractCommand {
+    public SaveImageCommand(IRepository<Image> imageRepository) {
+        super(imageRepository);
+    }
+
     @Override
-    public ICommand execute(MessageReceivedEvent event, Profile profile, IRepository repository, Logger logger) {
+    public ICommand execute(MessageReceivedEvent event, Profile profile) throws IOException {
         String url = event.getMessage().getContent();
         try (InputStream inputStream = WebUtil.getStreamFromURL(url)) {
             Image img = new Image(inputStream, profile);
-            repository.add(img);
-            repository.update(img);
-        } catch (IOException e) {
-            //TODO Надо не проглатывать исключение, а пробрасывать наверх
-            logger.warn(e);
+            super.getImageRepository().add(img);
+            super.getImageRepository().update(img);
         }
         event.getChannel().sendMessage("Круто. Теперь число от 1.0 до 3.0");
-        return new SaveBrightnessCommand();
+        return new SaveBrightnessCommand(super.getImageRepository());
     }
 }
